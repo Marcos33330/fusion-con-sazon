@@ -1,0 +1,169 @@
+import "dotenv/config";
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
+
+const prisma = new PrismaClient();
+
+const CDN = "https://fusionconsazon.uy/wp-content/uploads";
+
+async function main() {
+  // --- Admin único -----------------------------------------------------
+  const email = process.env.ADMIN_EMAIL!;
+  const password = process.env.ADMIN_PASSWORD!;
+  const name = process.env.ADMIN_NAME ?? "Administrador";
+  const passwordHash = await bcrypt.hash(password, 12);
+
+  await prisma.adminUser.upsert({
+    where: { email },
+    update: { passwordHash, name },
+    create: { email, passwordHash, name },
+  });
+  console.log(`✅ Admin listo: ${email}`);
+
+  // --- Bloques de texto (contenido real del sitio actual) --------------
+  const contentBlocks = [
+    {
+      key: "home_hero",
+      title: null,
+      body: "Un lugar donde cada plato es una experiencia y cada evento es un motivo para celebrar.",
+    },
+    {
+      key: "home_nosotros_preview",
+      title: "Nosotros",
+      body:
+        "Somos una pareja que desde que nos conocimos hemos tenido pasión por la comida y los postres, " +
+        "los sabores que se pueden fusionar y lograr un producto con ese sabor a hogar. Desde hace 20 años " +
+        "cada uno se especializó de manera empírica a desarrollar alimentos tanto salados como dulces " +
+        "comercializándolo solo hacia la familia y amigos.",
+    },
+    {
+      key: "nosotros_page",
+      title: "Nosotros",
+      body:
+        "Somos una pareja que desde que nos conocimos hemos tenido pasión por la comida y los postres, " +
+        "los sabores que se pueden fusionar y lograr un producto con ese sabor a hogar. Desde hace 20 años " +
+        "cada uno se especializó de manera empírica a desarrollar alimentos tanto salados como dulces " +
+        "comercializándolo solo hacia la familia y amigos.",
+    },
+    {
+      key: "home_entregas",
+      title: "ENTREGAS",
+      // Nota: este es el texto placeholder que el sitio original nunca terminó
+      // de reemplazar ("Lorem fistrum" es un generador de lorem ipsum en español).
+      // Reemplazalo desde el panel admin con la info real de entregas/delivery.
+      body:
+        "Lorem fistrum por la gloria de mi madre esse jarl aliqua llevame al sircoo. De la pradera ullamco " +
+        "qué dise usteer está la cosa muy malar, lorem fistrum por la gloria de mi madre esse jarl aliqua " +
+        "llevame al sircoo. De la pradera ullamco qué dise usteer está la cosa muy malar.",
+    },
+    {
+      key: "tortas_combos_title",
+      title: "¡Deleitate con nuestros Combos!",
+      body: "Consultá por nuestros combos de tortas y postres para tu evento o reunión familiar.",
+    },
+  ];
+
+  for (const block of contentBlocks) {
+    await prisma.contentBlock.upsert({
+      where: { key: block.key },
+      update: { title: block.title, body: block.body },
+      create: block,
+    });
+  }
+  console.log(`✅ ${contentBlocks.length} bloques de contenido cargados`);
+
+  // --- Datos de contacto -------------------------------------------------
+  await prisma.contactInfo.upsert({
+    where: { id: "contact-info-singleton" },
+    update: {},
+    create: {
+      id: "contact-info-singleton",
+      phone: "+598 91 842 491",
+      whatsapp: "+598 91 842 491",
+      address: "Montevideo - La Unión",
+      facebookUrl: "https://www.facebook.com/FusionconSazonUruguay",
+      instagramUrl: "https://www.instagram.com/fusionconsazon/",
+    },
+  });
+  console.log("✅ Datos de contacto cargados");
+
+  // --- Testimonios de ejemplo (el sitio original no tenía texto propio, ---
+  // --- usaba un link a reseñas de Google) ---------------------------------
+  const testimonials = [
+    { author: "Cliente satisfecho", text: "Excelente atención y el sabor de las tortas es increíble. Recomendados 100%.", order: 0 },
+    { author: "Cliente de catering", text: "Contratamos el catering para un evento familiar y todos quedaron encantados.", order: 1 },
+  ];
+  await prisma.testimonial.deleteMany();
+  await prisma.testimonial.createMany({ data: testimonials });
+  console.log(`✅ ${testimonials.length} testimonios de ejemplo cargados (editalos desde el panel admin)`);
+
+  // --- Media: se precarga con las URLs reales del sitio actual como -------
+  // --- punto de partida. El admin puede reemplazar cada foto/video desde --
+  // --- el panel; al reemplazar, ahí sí queda subido a Cloudinary. ---------
+  await prisma.mediaItem.deleteMany();
+
+  const media: {
+    page: "HOME" | "NOSOTROS" | "TORTAS" | "CATERING" | "EVENTOS_FOTOS" | "EVENTOS_VIDEOS";
+    type: "IMAGE" | "VIDEO";
+    url: string;
+    category?: string;
+    order: number;
+  }[] = [
+    // Nosotros
+    { page: "NOSOTROS", type: "IMAGE", url: `${CDN}/2025/01/foto-nosotros-2.png`, order: 0 },
+    { page: "NOSOTROS", type: "IMAGE", url: `${CDN}/2025/01/FOTOS_0003_Grupo-5-576x1024.jpg`, order: 1 },
+    { page: "NOSOTROS", type: "IMAGE", url: `${CDN}/2025/01/FOTOS_0013_Grupo-24-576x1024.jpg`, order: 2 },
+
+    // Tortas y Postres
+    { page: "TORTAS", type: "IMAGE", url: `${CDN}/2025/01/FOTOS_0031_Grupo-58.jpg`, order: 0 },
+    { page: "TORTAS", type: "IMAGE", url: `${CDN}/2025/01/FOTOS.jpg`, order: 1 },
+    { page: "TORTAS", type: "IMAGE", url: `${CDN}/2025/01/FOTOS_0000_Grupo-1.jpg`, order: 2 },
+    { page: "TORTAS", type: "IMAGE", url: `${CDN}/2025/01/FOTOS_0001_Grupo-3.jpg`, order: 3 },
+    { page: "TORTAS", type: "IMAGE", url: `${CDN}/2025/01/FOTOS_0002_Grupo-4.jpg`, order: 4 },
+    { page: "TORTAS", type: "IMAGE", url: `${CDN}/2025/01/FOTOS_0003_Grupo-5.jpg`, order: 5 },
+    { page: "TORTAS", type: "IMAGE", url: `${CDN}/2025/01/FOTOS_0004_Grupo-6.jpg`, order: 6 },
+    { page: "TORTAS", type: "IMAGE", url: `${CDN}/2025/01/FOTOS_0005_Grupo-7.jpg`, order: 7 },
+    { page: "TORTAS", type: "IMAGE", url: `${CDN}/2025/01/WhatsApp-Image-2025-01-16-at-5.16.17-PM-3.jpeg`, category: "Combos", order: 8 },
+    { page: "TORTAS", type: "IMAGE", url: `${CDN}/2025/01/WhatsApp-Image-2025-01-16-at-5.16.17-PM-2.jpeg`, category: "Combos", order: 9 },
+    { page: "TORTAS", type: "IMAGE", url: `${CDN}/2025/01/WhatsApp-Image-2025-01-16-at-5.16.18-PM.jpeg`, category: "Combos", order: 10 },
+
+    // Catering (sin categoría asignada todavía: asignalas desde el panel admin
+    // como "Comida Venezolana" / "Comida Uruguaya" / "Comida Internacional")
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/6-1.webp`, order: 0 },
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/8-1.webp`, order: 1 },
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/7-1.webp`, order: 2 },
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/9-1.webp`, order: 3 },
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/3-1.webp`, order: 4 },
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/4-1.webp`, order: 5 },
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/5-1.webp`, order: 6 },
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2024/09/CATERING-17.jpg`, order: 7 },
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2024/09/CATERING-10.jpg`, order: 8 },
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2024/09/CATERING-05.jpg`, order: 9 },
+
+    // Eventos - fotos
+    { page: "EVENTOS_FOTOS", type: "IMAGE", url: `${CDN}/2025/01/FOTOS_0006_Capa-1-copia-18_7_11zon.webp`, order: 0 },
+    { page: "EVENTOS_FOTOS", type: "IMAGE", url: `${CDN}/2025/01/FOTOS_0003_Capa-1-copia-15_4_11zon.webp`, order: 1 },
+    { page: "EVENTOS_FOTOS", type: "IMAGE", url: `${CDN}/2025/01/FOTOS_0002_Capa-1-copia-14_3_11zon.webp`, order: 2 },
+    { page: "EVENTOS_FOTOS", type: "IMAGE", url: `${CDN}/2025/02/EVENTOS_0019_Capa-1-copia-40.webp`, order: 3 },
+    { page: "EVENTOS_FOTOS", type: "IMAGE", url: `${CDN}/2025/02/EVENTOS_0018_Capa-1-copia-39.webp`, order: 4 },
+    { page: "EVENTOS_FOTOS", type: "IMAGE", url: `${CDN}/2025/02/EVENTOS_0017_Capa-1-copia-38.webp`, order: 5 },
+
+    // Eventos - videos
+    { page: "EVENTOS_VIDEOS", type: "VIDEO", url: `${CDN}/2025/01/Img-4642-20.mp4`, order: 0 },
+    { page: "EVENTOS_VIDEOS", type: "VIDEO", url: `${CDN}/2025/01/Document-5186453479874364626-18.mp4`, order: 1 },
+    { page: "EVENTOS_VIDEOS", type: "VIDEO", url: `${CDN}/2025/01/Document-5186453479874364625-17.mp4`, order: 2 },
+    { page: "EVENTOS_VIDEOS", type: "VIDEO", url: `${CDN}/2025/01/Document-5186453479874364624-14.mp4`, order: 3 },
+  ];
+
+  await prisma.mediaItem.createMany({
+    data: media.map((m) => ({ ...m, cloudinaryPublicId: "" })),
+  });
+  console.log(`✅ ${media.length} fotos/videos de referencia cargados (reemplazalos desde el panel admin)`);
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(() => prisma.$disconnect());

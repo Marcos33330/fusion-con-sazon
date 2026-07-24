@@ -1,0 +1,70 @@
+// Esquema de base de datos - Prisma
+// Motor: SQLite en desarrollo local (archivo dev.db, cero configuración).
+// Para producción se puede cambiar `provider` a "postgresql" y `DATABASE_URL`
+// a una cadena de conexión Postgres (Railway, Render, Supabase, etc.) sin
+// tocar el resto del código: Prisma traduce las mismas queries.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Administrador único del sitio (no hay registro público).
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// Bloques de texto editables (hero de inicio, "Nosotros", "Entregas", etc.)
+// Se identifican por una key fija que el frontend conoce de antemano.
+model ContentBlock {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  title     String?
+  body      String
+  updatedAt DateTime @updatedAt
+}
+// Fotos y videos administrables. `category` solo se usa en Catering
+// ("Comida Venezolana", "Comida Uruguaya", "Comida Internacional").
+model MediaItem {
+  id         String    @id @default(cuid())
+  page       String
+  type       String
+  category   String?
+  title      String?
+  url        String
+  cloudinaryPublicId String
+  order      Int       @default(0)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([page, category])
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  author    String
+  text      String
+  published Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Fila única (singleton) con los datos de contacto del footer.
+model ContactInfo {
+  id          String   @id @default(cuid())
+  phone       String
+  whatsapp    String
+  address     String
+  facebookUrl String?
+  instagramUrl String?
+  updatedAt   DateTime @updatedAt
+}
