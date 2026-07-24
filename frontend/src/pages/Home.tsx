@@ -88,19 +88,25 @@ export default function Home() {
         </h1>
       </section>
 
-      {/* Nosotros preview: foto de fondo grande + texto, como la página original */}
-      <section className="grid md:grid-cols-2 items-stretch">
-        <div className="relative min-h-[320px] bg-brand-dark">
-          {nosotrosPhoto && (
-            <img src={nosotrosPhoto.url} alt="Nosotros" className="absolute inset-0 w-full h-full object-cover" />
-          )}
-        </div>
-        <div className="flex flex-col justify-center px-6 md:px-14 py-14 bg-white">
-          <h2 className="text-2xl font-bold mb-4">Nosotros</h2>
-          <p className="text-gray-700 leading-relaxed">{get("home_nosotros_preview")}</p>
-          <Link to="/nosotros" className="inline-block mt-4 text-brand font-semibold hover:underline w-fit">
-            Leer más →
-          </Link>
+      {/* Nosotros preview: foto de la pareja (fondo transparente) sobre panel de color, como el sitio original */}
+      <section className="bg-gradient-to-br from-brand-dark via-brand to-brand-dark">
+        <div className="grid md:grid-cols-2 items-end max-w-6xl mx-auto">
+          <div className="flex justify-center md:justify-start px-6 pt-10 md:pt-0">
+            {nosotrosPhoto && (
+              <img
+                src={nosotrosPhoto.url}
+                alt="Nosotros"
+                className="h-[260px] md:h-[400px] w-auto object-contain object-bottom drop-shadow-2xl"
+              />
+            )}
+          </div>
+          <div className="bg-white px-6 md:px-14 py-12 md:py-16">
+            <h2 className="text-2xl font-bold mb-4">Nosotros</h2>
+            <p className="text-gray-700 leading-relaxed">{get("home_nosotros_preview")}</p>
+            <Link to="/nosotros" className="inline-block mt-4 text-brand font-semibold hover:underline w-fit">
+              Leer más →
+            </Link>
+          </div>
         </div>
       </section>
 
