@@ -127,18 +127,20 @@ async function main() {
     { page: "TORTAS", type: "IMAGE", url: `${CDN}/2025/01/WhatsApp-Image-2025-01-16-at-5.16.17-PM-2.jpeg`, category: "Combos", order: 9 },
     { page: "TORTAS", type: "IMAGE", url: `${CDN}/2025/01/WhatsApp-Image-2025-01-16-at-5.16.18-PM.jpeg`, category: "Combos", order: 10 },
 
-    // Catering (sin categoría asignada todavía: asignalas desde el panel admin
-    // como "Comida Venezolana" / "Comida Uruguaya" / "Comida Internacional")
-    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/6-1.webp`, order: 0 },
-    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/8-1.webp`, order: 1 },
-    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/7-1.webp`, order: 2 },
-    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/9-1.webp`, order: 3 },
-    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/3-1.webp`, order: 4 },
-    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/4-1.webp`, order: 5 },
-    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/5-1.webp`, order: 6 },
-    { page: "CATERING", type: "IMAGE", url: `${CDN}/2024/09/CATERING-17.jpg`, order: 7 },
-    { page: "CATERING", type: "IMAGE", url: `${CDN}/2024/09/CATERING-10.jpg`, order: 8 },
-    { page: "CATERING", type: "IMAGE", url: `${CDN}/2024/09/CATERING-05.jpg`, order: 9 },
+    // Catering: asigno categorías de referencia repartidas entre las 3 (el
+    // sitio original no expone esta info en el HTML plano). Corregilas desde
+    // el panel admin > Fotos y videos > Catering, con el selector de categoría
+    // de cada item, según qué plato es cada foto realmente.
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/6-1.webp`, category: "Comida Venezolana", order: 0 },
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/8-1.webp`, category: "Comida Venezolana", order: 1 },
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/7-1.webp`, category: "Comida Venezolana", order: 2 },
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2024/09/CATERING-17.jpg`, category: "Comida Venezolana", order: 3 },
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/9-1.webp`, category: "Comida Uruguaya", order: 4 },
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/3-1.webp`, category: "Comida Uruguaya", order: 5 },
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2024/09/CATERING-10.jpg`, category: "Comida Uruguaya", order: 6 },
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/4-1.webp`, category: "Comida Internacional", order: 7 },
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2025/02/5-1.webp`, category: "Comida Internacional", order: 8 },
+    { page: "CATERING", type: "IMAGE", url: `${CDN}/2024/09/CATERING-05.jpg`, category: "Comida Internacional", order: 9 },
 
     // Eventos - fotos
     { page: "EVENTOS_FOTOS", type: "IMAGE", url: `${CDN}/2025/01/FOTOS_0006_Capa-1-copia-18_7_11zon.webp`, order: 0 },

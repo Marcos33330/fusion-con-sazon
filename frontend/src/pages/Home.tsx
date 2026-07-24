@@ -9,49 +9,116 @@ export default function Home() {
   const { get, loading } = useContent();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [tortasPreview, setTortasPreview] = useState<MediaItem[]>([]);
+  const [tortasHero, setTortasHero] = useState<MediaItem | null>(null);
+  const [cateringHero, setCateringHero] = useState<MediaItem | null>(null);
+  const [nosotrosPhoto, setNosotrosPhoto] = useState<MediaItem | null>(null);
 
   useEffect(() => {
     api.get<Testimonial[]>("/testimonials").then(setTestimonials).catch(() => {});
     api
       .get<MediaItem[]>("/media?page=TORTAS")
-      .then((items) => setTortasPreview(items.slice(0, 4)))
+      .then((items) => {
+        setTortasPreview(items.slice(0, 4));
+        setTortasHero(items[0] ?? null);
+      })
+      .catch(() => {});
+    api
+      .get<MediaItem[]>("/media?page=CATERING")
+      .then((items) => setCateringHero(items[0] ?? null))
+      .catch(() => {});
+    api
+      .get<MediaItem[]>("/media?page=NOSOTROS")
+      .then((items) => setNosotrosPhoto(items[0] ?? null))
       .catch(() => {});
   }, []);
 
   return (
     <PublicLayout>
-      {/* Hero */}
-      <section className="bg-brand-light py-20 text-center px-4">
-        <h1 className="text-3xl md:text-5xl font-bold text-brand-dark max-w-3xl mx-auto">
+      {/* Hero: dos tarjetas grandes con foto de fondo + overlay oscuro, como el sitio original */}
+      <section className="grid sm:grid-cols-2">
+        <Link
+          to="/tortas-y-postres"
+          className="group relative h-[46vh] min-h-[280px] flex items-center justify-center overflow-hidden bg-brand-dark"
+        >
+          {tortasHero && (
+            <img
+              src={tortasHero.url}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-80 group-hover:scale-105 transition-all duration-500"
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
+          <div className="relative text-center px-4">
+            <h2 className="text-white text-3xl md:text-4xl font-extrabold tracking-wide drop-shadow-lg">
+              TORTAS Y POSTRES
+            </h2>
+            <span className="inline-block mt-4 text-white border border-white/80 px-5 py-2 rounded-full text-sm font-semibold group-hover:bg-white group-hover:text-brand-dark transition">
+              Ver más
+            </span>
+          </div>
+        </Link>
+
+        <Link
+          to="/catering"
+          className="group relative h-[46vh] min-h-[280px] flex items-center justify-center overflow-hidden bg-brand-dark"
+        >
+          {cateringHero && (
+            <img
+              src={cateringHero.url}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-80 group-hover:scale-105 transition-all duration-500"
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
+          <div className="relative text-center px-4">
+            <h2 className="text-white text-3xl md:text-4xl font-extrabold tracking-wide drop-shadow-lg">
+              CATERING
+            </h2>
+            <span className="inline-block mt-4 text-white border border-white/80 px-5 py-2 rounded-full text-sm font-semibold group-hover:bg-white group-hover:text-brand-dark transition">
+              Ver platos
+            </span>
+          </div>
+        </Link>
+      </section>
+
+      {/* Frase principal */}
+      <section className="bg-brand-light py-14 text-center px-4">
+        <h1 className="text-2xl md:text-4xl font-bold text-brand-dark max-w-3xl mx-auto leading-snug">
           {loading ? "Cargando..." : get("home_hero")}
         </h1>
-        <div className="mt-8 flex justify-center gap-4 flex-wrap">
-          <Link to="/tortas-y-postres" className="bg-brand text-white px-6 py-3 rounded-full font-semibold hover:bg-brand-dark transition">
-            Ver Tortas y Postres
-          </Link>
-          <Link to="/catering" className="bg-white text-brand border border-brand px-6 py-3 rounded-full font-semibold hover:bg-brand-light transition">
-            Ver Catering
+      </section>
+
+      {/* Nosotros preview: foto de fondo grande + texto, como la página original */}
+      <section className="grid md:grid-cols-2 items-stretch">
+        <div className="relative min-h-[320px] bg-brand-dark">
+          {nosotrosPhoto && (
+            <img src={nosotrosPhoto.url} alt="Nosotros" className="absolute inset-0 w-full h-full object-cover" />
+          )}
+        </div>
+        <div className="flex flex-col justify-center px-6 md:px-14 py-14 bg-white">
+          <h2 className="text-2xl font-bold mb-4">Nosotros</h2>
+          <p className="text-gray-700 leading-relaxed">{get("home_nosotros_preview")}</p>
+          <Link to="/nosotros" className="inline-block mt-4 text-brand font-semibold hover:underline w-fit">
+            Leer más →
           </Link>
         </div>
       </section>
 
-      {/* Nosotros preview */}
-      <section className="max-w-5xl mx-auto px-4 py-16 grid md:grid-cols-2 gap-8 items-center">
-        <div>
-          <h2 className="text-2xl font-bold mb-4">{get("home_nosotros_preview", "Nosotros")}</h2>
-          <p className="text-gray-700 leading-relaxed">
-            {get("home_nosotros_preview")}
-          </p>
-          <Link to="/nosotros" className="inline-block mt-4 text-brand font-semibold hover:underline">
-            Leer más →
-          </Link>
-        </div>
-        <div className="grid grid-cols-2 gap-2">
+      {/* Preview fotos de tortas */}
+      {tortasPreview.length > 0 && (
+        <section className="grid grid-cols-2 md:grid-cols-4">
           {tortasPreview.map((item) => (
-            <img key={item.id} src={item.url} alt="" className="rounded-lg aspect-square object-cover" loading="lazy" />
+            <div key={item.id} className="aspect-square overflow-hidden group">
+              <img
+                src={item.url}
+                alt=""
+                loading="lazy"
+                className="w-full h-full object-cover group-hover:scale-110 group-hover:opacity-90 transition-all duration-500"
+              />
+            </div>
           ))}
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Entregas */}
       <section className="bg-gray-50 py-16 px-4">
