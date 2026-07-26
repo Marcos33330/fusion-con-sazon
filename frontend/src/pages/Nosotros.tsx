@@ -3,18 +3,27 @@ import { useContent } from "../hooks/useContentBlock";
 import { api } from "../api/client";
 import { MediaItem } from "../types";
 import PublicLayout from "../components/PublicLayout";
-import MediaGrid from "../components/MediaGrid";
 import Marquee from "../components/Marquee";
+
+const accents = ["#E80541", "#FFA610", "#331806"];
 
 export default function Nosotros() {
   const { get, loading } = useContent();
   const [photo, setPhoto] = useState<MediaItem | null>(null);
+  const [gallery, setGallery] = useState<MediaItem[]>([]);
+  const [galleryLoading, setGalleryLoading] = useState(true);
 
   useEffect(() => {
     api
       .get<MediaItem[]>("/media?page=NOSOTROS")
-      .then((items) => setPhoto(items[0] ?? null))
-      .catch(() => {});
+      .then((items) => {
+        setPhoto(items[0] ?? null);
+        // La primera foto ya se usa como protagonista arriba, así que en la
+        // galería de "Nuestro trabajo" mostramos el resto para no repetirla.
+        setGallery(items.slice(1));
+      })
+      .catch(() => {})
+      .finally(() => setGalleryLoading(false));
   }, []);
 
   return (
@@ -67,9 +76,39 @@ export default function Nosotros() {
 
       <div className="deco-divider" style={{ ["--deco-color" as string]: "#E80541" }} />
 
+      {/* Galería centrada: se acomoda al ancho real de contenido en vez de
+          quedar pegada a la izquierda con un hueco vacío al costado */}
       <section className="max-w-5xl mx-auto px-4 py-16">
-        <h2 className="text-2xl font-bold text-center mb-8 text-brand-dark">Nuestro trabajo</h2>
-        <MediaGrid page="NOSOTROS" />
+        <h2 className="text-2xl font-bold text-center mb-10 text-brand-dark">Nuestro trabajo</h2>
+        {galleryLoading ? (
+          <p className="text-center text-gray-500">Cargando galería...</p>
+        ) : gallery.length > 0 ? (
+          <div className="flex flex-wrap justify-center gap-6">
+            {gallery.map((item, i) => (
+              <div
+                key={item.id}
+                className="stamp-edge group relative w-56 sm:w-64 aspect-square rounded-lg overflow-hidden shadow-md bg-gray-100"
+                style={{
+                  ["--stamp-bg" as string]: "#FAF8F5",
+                  borderTop: `4px solid ${accents[i % accents.length]}`,
+                }}
+              >
+                {item.type === "IMAGE" ? (
+                  <img
+                    src={item.url}
+                    alt={item.title ?? ""}
+                    loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                ) : (
+                  <video src={item.url} controls className="w-full h-full object-cover" preload="metadata" />
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-500">Todavía no hay más fotos cargadas acá.</p>
+        )}
       </section>
     </PublicLayout>
   );
