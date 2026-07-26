@@ -16,6 +16,14 @@ export default {
       },
       animation: {
         "spin-slow": "spin 7s linear infinite",
+        // Cinta en loop infinito, inspirada en la referencia Banh Mi World
+        marquee: "marquee 22s linear infinite",
+      },
+      keyframes: {
+        marquee: {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
     },
   },

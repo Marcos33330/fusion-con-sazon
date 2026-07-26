@@ -4,6 +4,7 @@ import { useContent } from "../hooks/useContentBlock";
 import { api } from "../api/client";
 import { Testimonial, MediaItem, ContactInfo } from "../types";
 import PublicLayout from "../components/PublicLayout";
+import Marquee from "../components/Marquee";
 
 export default function Home() {
   const { get, loading } = useContent();
@@ -11,6 +12,7 @@ export default function Home() {
   const [tortasPreview, setTortasPreview] = useState<MediaItem[]>([]);
   const [tortasHero, setTortasHero] = useState<MediaItem | null>(null);
   const [cateringHero, setCateringHero] = useState<MediaItem | null>(null);
+  const [eventosHero, setEventosHero] = useState<MediaItem | null>(null);
   const [nosotrosPhoto, setNosotrosPhoto] = useState<MediaItem | null>(null);
   const [contact, setContact] = useState<ContactInfo | null>(null);
 
@@ -29,6 +31,10 @@ export default function Home() {
       .then((items) => setCateringHero(items[0] ?? null))
       .catch(() => {});
     api
+      .get<MediaItem[]>("/media?page=EVENTOS_FOTOS")
+      .then((items) => setEventosHero(items[0] ?? null))
+      .catch(() => {});
+    api
       .get<MediaItem[]>("/media?page=NOSOTROS")
       .then((items) => setNosotrosPhoto(items[0] ?? null))
       .catch(() => {});
@@ -40,12 +46,67 @@ export default function Home() {
       )}`
     : "#";
 
+  // Tarjetas de categorías con foto real, cada una lleva a su página — como
+  // pidió el cliente, reemplazando los bloques genéricos anteriores.
+  const foodCards = [
+    {
+      to: "/tortas-y-postres",
+      label: "Tortas y Postres",
+      tag: "#DULCE  #CASERO",
+      bg: "bg-brand",
+      stamp: "#E80541",
+      img: tortasHero?.url,
+    },
+    {
+      to: "/catering",
+      label: "Catering",
+      tag: "#SABOR  #EVENTOS",
+      bg: "bg-brand-mustard",
+      stamp: "#FFA610",
+      img: cateringHero?.url,
+    },
+    {
+      to: "/eventos",
+      label: "Eventos",
+      tag: "#CELEBRAR  #COMPARTIR",
+      bg: "bg-brand-dark",
+      stamp: "#331806",
+      img: eventosHero?.url,
+    },
+  ];
+
   return (
     <PublicLayout>
-      {/* Hero premium: fondo plano chocolate, sello girando y dos CTA, como
-          la referencia Banh Mi World que pidió el cliente */}
+      {/* Hero premium: fondo plano chocolate, doodles dibujados a mano, sello
+          girando y tipografía grande con acento script — como la referencia
+          Banh Mi World que pidió el cliente */}
       <section className="relative bg-brand-dark overflow-hidden">
-        <div className="max-w-4xl mx-auto px-4 py-20 md:py-28 flex flex-col items-center text-center">
+        <svg
+          className="hidden md:block absolute top-14 left-10 w-16 h-16 text-brand-mustard/60 -rotate-12 pointer-events-none"
+          viewBox="0 0 64 64"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M14 6v18c0 3.5 2.7 5.5 5.5 5.5S25 27.5 25 24V6M19.5 6v13.5M14 34v24" />
+          <path d="M40 6c-6 0-9.5 6-9.5 13 0 5.5 3 8.5 6.5 9.5L35 58" />
+        </svg>
+        <svg
+          className="hidden md:block absolute bottom-10 right-12 w-20 h-20 text-brand/60 rotate-6 pointer-events-none"
+          viewBox="0 0 64 64"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        >
+          <path d="M16 52c8-6 8-14 0-20s-8-14 0-20" />
+          <path d="M32 52c8-6 8-14 0-20s-8-14 0-20" />
+          <path d="M48 52c8-6 8-14 0-20s-8-14 0-20" />
+        </svg>
+
+        <div className="relative max-w-4xl mx-auto px-4 py-20 md:py-28 flex flex-col items-center text-center">
           <div className="relative w-24 h-24 md:w-28 md:h-28 mb-8 shrink-0">
             <svg className="absolute inset-0 w-full h-full animate-spin-slow" viewBox="0 0 100 100">
               <defs>
@@ -64,8 +125,18 @@ export default function Home() {
             </div>
           </div>
 
-          <h1 className="text-white text-3xl md:text-5xl font-extrabold uppercase tracking-tight leading-[1.1] max-w-2xl">
-            {loading ? "Cargando..." : get("home_hero")}
+          <h1 className="text-white font-black uppercase tracking-tight leading-[0.95] text-4xl sm:text-5xl md:text-7xl max-w-3xl">
+            {loading ? (
+              "Cargando..."
+            ) : (
+              <>
+                Convertimos cada celebración en una{" "}
+                <span className="font-script italic normal-case tracking-normal text-brand-mustard">
+                  experiencia
+                </span>{" "}
+                para recordar.
+              </>
+            )}
           </h1>
 
           <div className="flex flex-col sm:flex-row gap-4 mt-10">
@@ -85,54 +156,38 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <div className="deco-divider" style={{ ["--deco-color" as string]: "#FFA610" }} />
       </section>
 
-      {/* Fotos grandes: Tortas y Postres / Catering */}
-      <section className="grid sm:grid-cols-2">
-        <Link
-          to="/tortas-y-postres"
-          className="group relative h-[46vh] min-h-[280px] flex items-center justify-center overflow-hidden bg-brand-dark"
-        >
-          {tortasHero && (
-            <img
-              src={tortasHero.url}
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-80 group-hover:scale-105 transition-all duration-500"
-            />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
-          <div className="relative text-center px-4">
-            <h2 className="text-white text-3xl md:text-4xl font-extrabold tracking-wide drop-shadow-lg">
-              TORTAS Y POSTRES
-            </h2>
-            <span className="inline-block mt-4 text-white border border-white/80 px-5 py-2 rounded-full text-sm font-semibold group-hover:bg-white group-hover:text-brand-dark transition">
-              Ver más
-            </span>
-          </div>
-        </Link>
+      {/* Cinta en loop infinito, como la de la referencia Banh Mi World */}
+      <Marquee items={["Catering", "Tortas y Postres", "Eventos", "100% Casero", "Sabor de Hogar"]} />
 
-        <Link
-          to="/catering"
-          className="group relative h-[46vh] min-h-[280px] flex items-center justify-center overflow-hidden bg-brand-dark"
-        >
-          {cateringHero && (
-            <img
-              src={cateringHero.url}
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-80 group-hover:scale-105 transition-all duration-500"
-            />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
-          <div className="relative text-center px-4">
-            <h2 className="text-white text-3xl md:text-4xl font-extrabold tracking-wide drop-shadow-lg">
-              CATERING
-            </h2>
-            <span className="inline-block mt-4 text-white border border-white/80 px-5 py-2 rounded-full text-sm font-semibold group-hover:bg-white group-hover:text-brand-dark transition">
-              Ver platos
-            </span>
-          </div>
-        </Link>
+      {/* Tarjetas de categorías: foto real de cada rubro, cada una lleva a su página */}
+      <section className="max-w-6xl mx-auto px-4 py-16 md:py-20">
+        <h2 className="text-2xl md:text-3xl font-extrabold text-center mb-10 text-brand-dark">
+          Elegí tu experiencia
+        </h2>
+        <div className="grid sm:grid-cols-3 gap-6">
+          {foodCards.map((c) => (
+            <Link
+              key={c.to}
+              to={c.to}
+              className={`stamp-edge group relative flex flex-col items-center text-center p-6 rounded-lg shadow-lg transition-transform hover:-translate-y-1 ${c.bg}`}
+              style={{ ["--stamp-bg" as string]: c.stamp }}
+            >
+              <div className="w-full aspect-square rounded-md overflow-hidden shadow-md mb-5 bg-black/10">
+                {c.img && (
+                  <img
+                    src={c.img}
+                    alt={c.label}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                )}
+              </div>
+              <h3 className="text-white text-xl md:text-2xl font-extrabold uppercase tracking-wide">{c.label}</h3>
+              <span className="mt-3 text-white/90 text-xs font-bold uppercase tracking-widest">{c.tag}</span>
+            </Link>
+          ))}
+        </div>
       </section>
 
       {/* Nosotros preview: foto de la pareja (fondo transparente) sobre panel de color */}
