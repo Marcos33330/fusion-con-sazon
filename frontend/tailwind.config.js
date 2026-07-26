@@ -18,6 +18,7 @@ export default {
         "spin-slow": "spin 7s linear infinite",
         // Cinta en loop infinito, inspirada en la referencia Banh Mi World
         marquee: "marquee 22s linear infinite",
+      "marquee-slow": "marquee 38s linear infinite",
       },
       keyframes: {
         marquee: {

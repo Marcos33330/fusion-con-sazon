@@ -6,6 +6,8 @@
 
 body {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Fondo cálido de marca en vez de blanco puro, elegido por el cliente */
+  background-color: #faf8f5;
 }
 
 /* Fuente script para acentos tipo "the" de la referencia Banh Mi World */

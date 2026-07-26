@@ -5,6 +5,7 @@ import { api } from "../api/client";
 import { Testimonial, MediaItem, ContactInfo } from "../types";
 import PublicLayout from "../components/PublicLayout";
 import Marquee from "../components/Marquee";
+import ImageMarquee from "../components/ImageMarquee";
 
 export default function Home() {
   const { get, loading } = useContent();
@@ -22,7 +23,7 @@ export default function Home() {
     api
       .get<MediaItem[]>("/media?page=TORTAS")
       .then((items) => {
-        setTortasPreview(items.slice(0, 4));
+        setTortasPreview(items);
         setTortasHero(items[0] ?? null);
       })
       .catch(() => {});
@@ -190,66 +191,99 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Nosotros preview: foto de la pareja (fondo transparente) sobre panel de color */}
-      <section className="bg-gradient-to-br from-brand-dark via-brand to-brand-dark">
+      {/* Nosotros preview: foto de la pareja sobre fondo chocolate premium */}
+      <section className="relative bg-brand-dark overflow-hidden">
         <div className="grid md:grid-cols-2 items-end max-w-6xl mx-auto">
           <div className="flex justify-center md:justify-start px-6 pt-10 md:pt-0">
             {nosotrosPhoto && (
               <img
                 src={nosotrosPhoto.url}
                 alt="Nosotros"
-                className="h-[260px] md:h-[400px] w-auto object-contain object-bottom drop-shadow-2xl"
+                className="h-[340px] md:h-[560px] w-auto object-contain object-bottom drop-shadow-2xl"
               />
             )}
           </div>
-          <div className="bg-white px-6 md:px-14 py-12 md:py-16">
-            <h2 className="text-2xl font-bold mb-4 text-brand-dark">Nosotros</h2>
-            <p className="text-gray-700 leading-relaxed">{get("home_nosotros_preview")}</p>
-            <Link to="/nosotros" className="inline-block mt-4 text-brand font-semibold hover:underline w-fit">
+          <div className="bg-brand-light px-6 md:px-14 py-12 md:py-16">
+            <p className="font-script text-4xl md:text-5xl text-brand leading-none mb-1 -rotate-2">Conocé a</p>
+            <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-brand-dark mb-2">
+              Nosotros
+            </h2>
+            <span className="block w-16 h-1 bg-brand-mustard rounded-full mb-5" />
+            <p className="text-gray-700 text-lg leading-relaxed">{get("home_nosotros_preview")}</p>
+            <Link
+              to="/nosotros"
+              className="inline-flex items-center gap-2 mt-6 bg-brand hover:bg-brand-mustard hover:text-brand-dark text-white font-bold uppercase tracking-wide text-sm px-6 py-3 rounded-full transition w-fit"
+            >
               Leer más →
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Preview fotos de tortas */}
-      {tortasPreview.length > 0 && (
-        <section className="grid grid-cols-2 md:grid-cols-4">
-          {tortasPreview.map((item) => (
-            <div key={item.id} className="aspect-square overflow-hidden group">
-              <img
-                src={item.url}
-                alt=""
-                loading="lazy"
-                className="w-full h-full object-cover group-hover:scale-110 group-hover:opacity-90 transition-all duration-500"
-              />
+      {/* Preview fotos de tortas: carrusel infinito */}
+      <ImageMarquee items={tortasPreview} />
+
+      {/* Testimonios: reseñas reales de Google, destacadas con estrellas y sello */}
+      <section id="testimonios" className="bg-brand-gray py-20 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <p className="font-script text-4xl md:text-5xl text-brand leading-none mb-1 -rotate-2">Lo que dicen</p>
+            <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-brand-dark mb-4">de nosotros</h2>
+            <div className="inline-flex items-center gap-2 bg-white rounded-full shadow-md px-5 py-2.5">
+              <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.26 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z" />
+                <path fill="#FBBC05" d="M5.84 14.09A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.44.34-2.09V7.07H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.93l3.66-2.84z" />
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1a11 11 0 0 0-9.82 6.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+              </svg>
+              <span className="font-bold text-brand-dark">5.0</span>
+              <span className="text-brand-mustard text-sm tracking-tighter">★★★★★</span>
+              <span className="text-gray-500 text-sm">· 52 reseñas de Google</span>
             </div>
-          ))}
-        </section>
-      )}
+          </div>
 
-      {/* Entregas */}
-      <section className="bg-brand-gray py-16 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-2xl font-bold mb-4 text-brand-dark">ENTREGAS</h2>
-          <p className="text-gray-700 leading-relaxed">{get("home_entregas")}</p>
-        </div>
-      </section>
+          <div className="grid md:grid-cols-3 gap-6">
+            {testimonials.map((t) => {
+              const [name, source] = t.author.split(" · ");
+              return (
+                <blockquote
+                  key={t.id}
+                  className="relative bg-white rounded-2xl shadow-xl p-7 pt-10 hover:-translate-y-1 transition-transform duration-300"
+                >
+                  <span className="absolute -top-5 left-7 w-10 h-10 rounded-full bg-brand-mustard text-white flex items-center justify-center text-2xl font-black shadow-md">
+                    "
+                  </span>
+                  <div className="text-brand-mustard text-sm tracking-tighter mb-3">★★★★★</div>
+                  <p className="text-gray-700 leading-relaxed">{t.text}</p>
+                  <footer className="mt-5 flex items-center gap-2">
+                    <span className="font-bold text-brand-dark">{name}</span>
+                    {source && (
+                      <span className="inline-flex items-center gap-1 text-xs text-gray-400">
+                        <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
+                          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
+                          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.26 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z" />
+                          <path fill="#FBBC05" d="M5.84 14.09A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.44.34-2.09V7.07H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.93l3.66-2.84z" />
+                          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1a11 11 0 0 0-9.82 6.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                        </svg>
+                        {source}
+                      </span>
+                    )}
+                  </footer>
+                </blockquote>
+              );
+            })}
+          </div>
 
-      {/* Testimonios: tarjetas tipo sello, con acento mostaza */}
-      <section id="testimonios" className="max-w-5xl mx-auto px-4 py-16">
-        <h2 className="text-2xl font-bold text-center mb-10 text-brand-dark">Testimonios</h2>
-        <div className="grid md:grid-cols-2 gap-8">
-          {testimonials.map((t) => (
-            <blockquote
-              key={t.id}
-              className="stamp-edge bg-white shadow-md rounded-lg p-6 border-t-4 border-brand-mustard"
-              style={{ ["--stamp-bg" as string]: "#FAF8F5" }}
+          <div className="text-center mt-10">
+            <a
+              href="https://www.google.com/search?q=Fusi%C3%B3n+con+Saz%C3%B3n+Opiniones"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 text-brand font-bold uppercase tracking-wide text-sm hover:underline"
             >
-              <p className="text-gray-700 italic">"{t.text}"</p>
-              <footer className="mt-3 text-sm font-semibold text-brand-dark">— {t.author}</footer>
-            </blockquote>
-          ))}
+              Ver todas las reseñas en Google →
+            </a>
+          </div>
         </div>
       </section>
     </PublicLayout>

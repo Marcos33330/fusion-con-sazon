@@ -5,25 +5,23 @@ import { MediaItem } from "../types";
 import PublicLayout from "../components/PublicLayout";
 import Marquee from "../components/Marquee";
 
-const accents = ["#E80541", "#FFA610", "#331806"];
-
 export default function Nosotros() {
   const { get, loading } = useContent();
   const [photo, setPhoto] = useState<MediaItem | null>(null);
-  const [gallery, setGallery] = useState<MediaItem[]>([]);
-  const [galleryLoading, setGalleryLoading] = useState(true);
+  const [dreamImg, setDreamImg] = useState<MediaItem | null>(null);
+  const [whyImg, setWhyImg] = useState<MediaItem | null>(null);
 
   useEffect(() => {
     api
       .get<MediaItem[]>("/media?page=NOSOTROS")
       .then((items) => {
         setPhoto(items[0] ?? null);
-        // La primera foto ya se usa como protagonista arriba, así que en la
-        // galería de "Nuestro trabajo" mostramos el resto para no repetirla.
-        setGallery(items.slice(1));
+        // Reutilizamos las siguientes fotos del rubro para ilustrar cada
+        // tarjeta de la historia, conectadas foto + texto como pidió el cliente.
+        setDreamImg(items[1] ?? null);
+        setWhyImg(items[2] ?? null);
       })
-      .catch(() => {})
-      .finally(() => setGalleryLoading(false));
+      .catch(() => {});
   }, []);
 
   return (
@@ -53,8 +51,13 @@ export default function Nosotros() {
           <path d="M48 52c8-6 8-14 0-20s-8-14 0-20" />
         </svg>
 
-        <p className="uppercase tracking-widest text-brand font-bold mb-2 text-sm">¡Hola!</p>
-        <h2 className="text-3xl md:text-4xl font-extrabold text-brand-dark mb-10">Somos Herminia y Oscar</h2>
+        <p className="font-script text-6xl md:text-7xl text-brand leading-none mb-1 -rotate-2">¡Hola!</p>
+        <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-brand-dark mb-10">
+          Somos{" "}
+          <span className="font-script italic normal-case tracking-normal text-brand-mustard">
+            Herminia y Oscar
+          </span>
+        </h2>
 
         <div className="relative max-w-lg mx-auto mb-12">
           {/* Manchas de color detrás de la foto, como marco/protagonismo */}
@@ -69,47 +72,63 @@ export default function Nosotros() {
           )}
         </div>
 
-        <p className="max-w-2xl mx-auto text-gray-700 leading-relaxed text-lg whitespace-pre-line">
-          {loading ? "Cargando..." : get("nosotros_page")}
-        </p>
+        <div className="relative max-w-3xl mx-auto">
+          <span
+            aria-hidden="true"
+            className="hidden sm:block absolute -top-10 -left-4 md:-left-10 font-script text-8xl md:text-9xl text-brand/20 select-none pointer-events-none"
+          >
+            "
+          </span>
+          <p className="relative text-xl md:text-2xl text-brand-dark/90 font-medium leading-relaxed whitespace-pre-line">
+            {loading ? "Cargando..." : get("nosotros_page")}
+          </p>
+          <span className="block mx-auto mt-6 w-16 h-1 bg-brand-mustard rounded-full" />
+        </div>
+      </section>
+
+      {/* Historia completa: dos tarjetas foto + texto conectadas, a todo el
+          ancho de la página, como la referencia Banh Mi World que mandó el
+          cliente (mitad foto a sangre, mitad panel de color con el texto) */}
+      {/* Tarjeta 1: foto a la izquierda, texto a la derecha */}
+      <section className="grid md:grid-cols-2">
+        <div className="h-72 md:h-auto md:min-h-[560px]">
+          {dreamImg && (
+            <img src={dreamImg.url} alt="" className="w-full h-full object-cover" />
+          )}
+        </div>
+        <div className="bg-brand-dark text-white p-8 sm:p-12 md:p-16 flex flex-col justify-center">
+          <h3 className="text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-tight leading-tight mb-5">
+            Dejarlo todo para seguir{" "}
+            <span className="font-script italic normal-case tracking-normal text-brand-mustard">
+              nuestro sueño
+            </span>
+          </h3>
+          <p className="text-white/90 leading-relaxed whitespace-pre-line">
+            {loading ? "Cargando..." : get("nosotros_dream")}
+          </p>
+        </div>
+      </section>
+
+      {/* Tarjeta 2: texto a la izquierda, foto a la derecha (alternada) */}
+      <section className="grid md:grid-cols-2">
+        <div className="bg-brand-dark text-white p-8 sm:p-12 md:p-16 flex flex-col justify-center order-2 md:order-1">
+          <h3 className="text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-tight leading-tight mb-5">
+            ¿Por qué{" "}
+            <span className="font-script italic normal-case tracking-normal text-brand-mustard">
+              Fusión con Sazón
+            </span>
+            ?
+          </h3>
+          <p className="text-white/90 leading-relaxed whitespace-pre-line">
+            {loading ? "Cargando..." : get("nosotros_why")}
+          </p>
+        </div>
+        <div className="h-72 md:h-auto md:min-h-[560px] order-1 md:order-2">
+          {whyImg && <img src={whyImg.url} alt="" className="w-full h-full object-cover" />}
+        </div>
       </section>
 
       <div className="deco-divider" style={{ ["--deco-color" as string]: "#E80541" }} />
-
-      {/* Galería centrada: se acomoda al ancho real de contenido en vez de
-          quedar pegada a la izquierda con un hueco vacío al costado */}
-      <section className="max-w-5xl mx-auto px-4 py-16">
-        <h2 className="text-2xl font-bold text-center mb-10 text-brand-dark">Nuestro trabajo</h2>
-        {galleryLoading ? (
-          <p className="text-center text-gray-500">Cargando galería...</p>
-        ) : gallery.length > 0 ? (
-          <div className="flex flex-wrap justify-center gap-6">
-            {gallery.map((item, i) => (
-              <div
-                key={item.id}
-                className="stamp-edge group relative w-56 sm:w-64 aspect-square rounded-lg overflow-hidden shadow-md bg-gray-100"
-                style={{
-                  ["--stamp-bg" as string]: "#FAF8F5",
-                  borderTop: `4px solid ${accents[i % accents.length]}`,
-                }}
-              >
-                {item.type === "IMAGE" ? (
-                  <img
-                    src={item.url}
-                    alt={item.title ?? ""}
-                    loading="lazy"
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                ) : (
-                  <video src={item.url} controls className="w-full h-full object-cover" preload="metadata" />
-                )}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-center text-gray-500">Todavía no hay más fotos cargadas acá.</p>
-        )}
-      </section>
     </PublicLayout>
   );
 }

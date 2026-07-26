@@ -40,10 +40,36 @@ async function main() {
       key: "nosotros_page",
       title: "Nosotros",
       body:
-        "Somos una pareja que desde que nos conocimos hemos tenido pasión por la comida y los postres, " +
-        "los sabores que se pueden fusionar y lograr un producto con ese sabor a hogar. Desde hace 20 años " +
-        "cada uno se especializó de manera empírica a desarrollar alimentos tanto salados como dulces " +
-        "comercializándolo solo hacia la familia y amigos.",
+        "Somos una pareja que comparte la misma pasión: cocinar, crear y celebrar con sabor. Desde que nos " +
+        "conocimos, supimos que la cocina era nuestro espacio de conexión, donde fusionábamos ingredientes, " +
+        "culturas y emociones para dar vida a platos inolvidables.\n\n" +
+        "Por más de 20 años, nos dedicamos a perfeccionar nuestras recetas, experimentando con sabores y " +
+        "texturas, siempre con el objetivo de llevar a la mesa ese toque casero y especial que se siente en " +
+        "cada bocado. Lo que comenzó como una pasión entre familia y amigos, poco a poco se convirtió en lo " +
+        "que hoy es Fusión con Sazón: un lugar donde cada plato es una experiencia y cada evento es un " +
+        "motivo para celebrar.",
+    },
+    {
+      key: "nosotros_dream",
+      title: "Dejarlo todo para seguir nuestro sueño",
+      body:
+        "Cuando decidimos emigrar a Uruguay, muchos nos preguntaban por qué no hacíamos de la gastronomía " +
+        "nuestra profesión. La respuesta era simple: era el momento de seguir nuestra pasión. Llegamos hace " +
+        "7 años y, después de recorrer caminos y adaptarnos a nuevos desafíos, supimos que este era nuestro " +
+        "propósito: llevar el verdadero sabor de casa a cada celebración.\n\n" +
+        "Hoy, en Fusión con Sazón, no solo cocinamos, sino que creamos experiencias. Nos apasiona hacer que " +
+        "cada evento tenga ese toque único, ese sabor inolvidable que deja huella en cada reunión, " +
+        "cumpleaños o encuentro especial.",
+    },
+    {
+      key: "nosotros_why",
+      title: "¿Por qué 'Fusión con Sazón'?",
+      body:
+        "Porque nuestro amor por la cocina no tiene fronteras. Fusionamos culturas, tradiciones y sabores " +
+        "para dar vida a platos que despiertan emociones. Desde un bocado dulce hasta una picada llena de " +
+        "sabor, todo lo que hacemos lleva nuestra esencia, dedicación y amor por la gastronomía.\n\n" +
+        "Si algo hemos aprendido en este camino es que la comida no solo alimenta el cuerpo, también une, " +
+        "emociona y crea recuerdos. Y eso es exactamente lo que queremos compartir contigo en cada plato.",
     },
     {
       key: "home_entregas",
