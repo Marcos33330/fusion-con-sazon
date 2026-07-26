@@ -29,10 +29,19 @@ export default function MediaGrid({ page, category }: Props) {
     return <p className="text-center text-gray-500 py-8">Todavía no hay contenido cargado acá.</p>;
   }
 
+  const accents = ["#E80541", "#FFA610", "#331806"];
+
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-      {items.map((item) => (
-        <div key={item.id} className="group relative aspect-square overflow-hidden rounded-lg bg-gray-100">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+      {items.map((item, i) => (
+        <div
+          key={item.id}
+          className="stamp-edge group relative aspect-square overflow-hidden rounded-lg bg-gray-100 shadow-md"
+          style={{
+            ["--stamp-bg" as string]: "#FAF8F5",
+            borderTop: `4px solid ${accents[i % accents.length]}`,
+          }}
+        >
           {item.type === "IMAGE" ? (
             <>
               <img

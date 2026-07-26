@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useContent } from "../hooks/useContentBlock";
 import { api } from "../api/client";
-import { Testimonial, MediaItem } from "../types";
+import { Testimonial, MediaItem, ContactInfo } from "../types";
 import PublicLayout from "../components/PublicLayout";
 
 export default function Home() {
@@ -12,9 +12,11 @@ export default function Home() {
   const [tortasHero, setTortasHero] = useState<MediaItem | null>(null);
   const [cateringHero, setCateringHero] = useState<MediaItem | null>(null);
   const [nosotrosPhoto, setNosotrosPhoto] = useState<MediaItem | null>(null);
+  const [contact, setContact] = useState<ContactInfo | null>(null);
 
   useEffect(() => {
     api.get<Testimonial[]>("/testimonials").then(setTestimonials).catch(() => {});
+    api.get<ContactInfo>("/contact").then(setContact).catch(() => {});
     api
       .get<MediaItem[]>("/media?page=TORTAS")
       .then((items) => {
@@ -32,9 +34,61 @@ export default function Home() {
       .catch(() => {});
   }, []);
 
+  const waHref = contact
+    ? `https://wa.me/${contact.whatsapp.replace(/[^\d]/g, "")}?text=${encodeURIComponent(
+        "Hola, quisiera solicitar un presupuesto."
+      )}`
+    : "#";
+
   return (
     <PublicLayout>
-      {/* Hero: dos tarjetas grandes con foto de fondo + overlay oscuro, como el sitio original */}
+      {/* Hero premium: fondo plano chocolate, sello girando y dos CTA, como
+          la referencia Banh Mi World que pidió el cliente */}
+      <section className="relative bg-brand-dark overflow-hidden">
+        <div className="max-w-4xl mx-auto px-4 py-20 md:py-28 flex flex-col items-center text-center">
+          <div className="relative w-24 h-24 md:w-28 md:h-28 mb-8 shrink-0">
+            <svg className="absolute inset-0 w-full h-full animate-spin-slow" viewBox="0 0 100 100">
+              <defs>
+                <path id="badgeCircle" d="M 50,50 m -38,0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0" />
+              </defs>
+              <text fill="#FFA610" fontSize="8.2" fontWeight="700" letterSpacing="2">
+                <textPath href="#badgeCircle">
+                  • SABOR DE HOGAR • FUSIÓN CON SAZÓN •
+                </textPath>
+              </text>
+            </svg>
+            <div className="absolute inset-3 rounded-full bg-brand flex items-center justify-center text-white text-[11px] font-extrabold text-center leading-tight px-2">
+              100%
+              <br />
+              CASERO
+            </div>
+          </div>
+
+          <h1 className="text-white text-3xl md:text-5xl font-extrabold uppercase tracking-tight leading-[1.1] max-w-2xl">
+            {loading ? "Cargando..." : get("home_hero")}
+          </h1>
+
+          <div className="flex flex-col sm:flex-row gap-4 mt-10">
+            <a
+              href={waHref}
+              target="_blank"
+              rel="noreferrer"
+              className="bg-brand hover:bg-brand-mustard hover:text-brand-dark text-white font-bold uppercase tracking-wide px-8 py-4 rounded-full transition text-sm"
+            >
+              Solicitar presupuesto
+            </a>
+            <Link
+              to="/catering"
+              className="border-2 border-white text-white hover:bg-white hover:text-brand-dark font-bold uppercase tracking-wide px-8 py-4 rounded-full transition text-sm"
+            >
+              Ver nuestros servicios
+            </Link>
+          </div>
+        </div>
+        <div className="deco-divider" style={{ ["--deco-color" as string]: "#FFA610" }} />
+      </section>
+
+      {/* Fotos grandes: Tortas y Postres / Catering */}
       <section className="grid sm:grid-cols-2">
         <Link
           to="/tortas-y-postres"
@@ -81,14 +135,7 @@ export default function Home() {
         </Link>
       </section>
 
-      {/* Frase principal */}
-      <section className="bg-brand-light py-14 text-center px-4">
-        <h1 className="text-2xl md:text-4xl font-bold text-brand-dark max-w-3xl mx-auto leading-snug">
-          {loading ? "Cargando..." : get("home_hero")}
-        </h1>
-      </section>
-
-      {/* Nosotros preview: foto de la pareja (fondo transparente) sobre panel de color, como el sitio original */}
+      {/* Nosotros preview: foto de la pareja (fondo transparente) sobre panel de color */}
       <section className="bg-gradient-to-br from-brand-dark via-brand to-brand-dark">
         <div className="grid md:grid-cols-2 items-end max-w-6xl mx-auto">
           <div className="flex justify-center md:justify-start px-6 pt-10 md:pt-0">
@@ -101,7 +148,7 @@ export default function Home() {
             )}
           </div>
           <div className="bg-white px-6 md:px-14 py-12 md:py-16">
-            <h2 className="text-2xl font-bold mb-4">Nosotros</h2>
+            <h2 className="text-2xl font-bold mb-4 text-brand-dark">Nosotros</h2>
             <p className="text-gray-700 leading-relaxed">{get("home_nosotros_preview")}</p>
             <Link to="/nosotros" className="inline-block mt-4 text-brand font-semibold hover:underline w-fit">
               Leer más →
@@ -127,19 +174,23 @@ export default function Home() {
       )}
 
       {/* Entregas */}
-      <section className="bg-gray-50 py-16 px-4">
+      <section className="bg-brand-gray py-16 px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-2xl font-bold mb-4">ENTREGAS</h2>
+          <h2 className="text-2xl font-bold mb-4 text-brand-dark">ENTREGAS</h2>
           <p className="text-gray-700 leading-relaxed">{get("home_entregas")}</p>
         </div>
       </section>
 
-      {/* Testimonios */}
+      {/* Testimonios: tarjetas tipo sello, con acento mostaza */}
       <section id="testimonios" className="max-w-5xl mx-auto px-4 py-16">
-        <h2 className="text-2xl font-bold text-center mb-10">Testimonios</h2>
-        <div className="grid md:grid-cols-2 gap-6">
+        <h2 className="text-2xl font-bold text-center mb-10 text-brand-dark">Testimonios</h2>
+        <div className="grid md:grid-cols-2 gap-8">
           {testimonials.map((t) => (
-            <blockquote key={t.id} className="bg-white shadow rounded-lg p-6">
+            <blockquote
+              key={t.id}
+              className="stamp-edge bg-white shadow-md rounded-lg p-6 border-t-4 border-brand-mustard"
+              style={{ ["--stamp-bg" as string]: "#FAF8F5" }}
+            >
               <p className="text-gray-700 italic">"{t.text}"</p>
               <footer className="mt-3 text-sm font-semibold text-brand-dark">— {t.author}</footer>
             </blockquote>

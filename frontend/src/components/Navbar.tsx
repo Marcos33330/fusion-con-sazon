@@ -21,8 +21,18 @@ export default function Navbar() {
   return (
     <header className="bg-white shadow-sm sticky top-0 z-40">
       <nav className="max-w-6xl mx-auto flex items-center justify-between px-4 py-3 gap-4">
-        <NavLink to="/" className="text-xl font-bold text-brand-dark shrink-0">
-          Fusión con Sazón
+        <NavLink to="/" className="flex items-center gap-3 shrink-0">
+          <img
+            src="https://fusionconsazon.uy/wp-content/uploads/2024/09/LOGO-PNG-1024x862.png"
+            alt="Fusión con Sazón"
+            className="h-11 w-auto"
+          />
+          <span className="hidden sm:flex flex-col leading-none">
+            <span className="text-lg font-bold text-brand-dark">Fusión con Sazón</span>
+            <span className="text-[11px] uppercase tracking-wide text-brand font-semibold mt-0.5">
+              Experiencias para compartir
+            </span>
+          </span>
         </NavLink>
         <ul className="hidden md:flex gap-6 text-sm font-medium">
           {links.map((link) => (
@@ -39,8 +49,18 @@ export default function Navbar() {
             </li>
           ))}
         </ul>
-        {/* Redes sociales, como los botones circulares del sitio original */}
-        <div className="flex items-center gap-2 shrink-0">
+        {/* CTA + redes sociales */}
+        <div className="flex items-center gap-3 shrink-0">
+          {contact?.whatsapp && (
+            <a
+              href={`https://wa.me/${contact.whatsapp.replace(/[^\d]/g, "")}`}
+              target="_blank"
+              rel="noreferrer"
+              className="hidden sm:inline-block bg-brand hover:bg-brand-dark text-white text-xs font-bold uppercase tracking-wide px-4 py-2 rounded-full transition"
+            >
+              Solicitar presupuesto
+            </a>
+          )}
           {contact?.facebookUrl && (
             <a
               href={contact.facebookUrl}

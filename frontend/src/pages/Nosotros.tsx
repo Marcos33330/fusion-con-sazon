@@ -18,11 +18,12 @@ export default function Nosotros() {
 
   return (
     <PublicLayout>
-      {/* Encabezado, como el banner de la página original */}
-      <section className="bg-gradient-to-br from-brand-dark via-brand to-brand-dark py-16 md:py-20 text-center px-4">
-        <h1 className="text-4xl md:text-5xl font-bold text-white">Nosotros</h1>
-        <span className="inline-block mt-4 w-24 h-1 bg-white/70 rounded-full" />
+      {/* Encabezado premium: fondo plano chocolate con acento mostaza */}
+      <section className="bg-brand-dark py-16 md:py-20 text-center px-4">
+        <h1 className="text-4xl md:text-5xl font-extrabold uppercase tracking-tight text-white">Nosotros</h1>
+        <span className="inline-block mt-4 w-24 h-1 bg-brand-mustard rounded-full" />
       </section>
+      <div className="deco-divider" style={{ ["--deco-color" as string]: "#E80541" }} />
 
       {/* Intro: foto de la pareja (fondo transparente) + texto, como el sitio original */}
       <section className="bg-brand-light">

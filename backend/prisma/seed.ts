@@ -25,7 +25,7 @@ async function main() {
     {
       key: "home_hero",
       title: null,
-      body: "Un lugar donde cada plato es una experiencia y cada evento es un motivo para celebrar.",
+      body: "Convertimos cada celebración en una experiencia para recordar.",
     },
     {
       key: "home_nosotros_preview",
