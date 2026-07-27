@@ -7,10 +7,18 @@ interface Props {
   category?: string;
 }
 
-// Galería sin "tarjeta": la foto es la protagonista, sin panel blanco ni
-// marco que le reste protagonismo. Solo un borde redondeado sutil, sombra
-// suave y un acento de color fino abajo, con el título (si existe) apareciendo
-// como overlay al pasar el mouse.
+// Galería de grilla pareja, todas las tarjetas del mismo tamaño.
+//
+// El formato es cuadrado por una razón concreta: las fotos de producto vienen
+// verticales (1125x2000) y los combos son cuadrados exactos (1080x1080).
+// Con tarjetas 4:5 los combos perdían los costados, que es justo donde están
+// el precio y el logo. En cuadrado los combos entran completos y las tortas
+// quedan centradas, que es el recorte natural para un producto centrado.
+//
+// El orden agrupa por categoría: primero lo que no tiene categoría, después
+// cada categoría en el orden en que aparece, y dentro de cada grupo se respeta
+// el `order` que fijó el admin. Así los combos quedan juntos al final en vez
+// de intercalados entre las tortas.
 export default function MediaGrid({ page, category }: Props) {
   const [items, setItems] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,31 +34,36 @@ export default function MediaGrid({ page, category }: Props) {
   }, [page, category]);
 
   if (loading) {
-    return <p className="text-center text-gray-500 py-8">Cargando galería...</p>;
+    return <p className="py-8 text-center text-brand-dark/50">Cargando galería...</p>;
   }
 
   if (items.length === 0) {
-    return <p className="text-center text-gray-500 py-8">Todavía no hay contenido cargado acá.</p>;
+    return <p className="py-8 text-center text-brand-dark/50">Todavía no hay contenido cargado acá.</p>;
   }
+
+  const cats = Array.from(new Set(items.map((it) => it.category ?? "")));
+  const ordered = ["", ...cats.filter((c) => c !== "")].flatMap((g) =>
+    items.filter((it) => (it.category ?? "") === g).sort((a, b) => a.order - b.order)
+  );
 
   const accents = ["#E80541", "#FFA610", "#331806"];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 md:gap-8">
-      {items.map((item, i) => (
-        <div
+    <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:gap-7">
+      {ordered.map((item, i) => (
+        <figure
           key={item.id}
-          className="group relative aspect-[4/5] w-full rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300"
+          className="group relative aspect-square overflow-hidden rounded-2xl bg-brand-gray shadow-warm transition-shadow duration-300 hover:shadow-warm-lg"
         >
           {item.type === "IMAGE" ? (
             <img
               src={item.url}
               alt={item.title ?? ""}
               loading="lazy"
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.04]"
             />
           ) : (
-            <video src={item.url} controls className="w-full h-full object-cover" preload="metadata" />
+            <video src={item.url} controls className="h-full w-full object-cover" preload="metadata" />
           )}
 
           {/* Acento de color fino, rotando por foto */}
@@ -61,11 +74,11 @@ export default function MediaGrid({ page, category }: Props) {
 
           {/* Título como overlay al pasar el mouse, sin ocupar espacio fijo */}
           {item.title && (
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-              <p className="w-full p-3 text-white text-xs sm:text-sm font-semibold">{item.title}</p>
-            </div>
+            <figcaption className="absolute inset-0 flex items-end bg-gradient-to-t from-brand-espresso/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <p className="w-full p-4 text-sm font-semibold text-white">{item.title}</p>
+            </figcaption>
           )}
-        </div>
+        </figure>
       ))}
     </div>
   );

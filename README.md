@@ -12,7 +12,9 @@ antes de pasar a producción.
 
 - [Node.js](https://nodejs.org/) versión 20 o superior (`node -v` para verificar)
 - [Visual Studio Code](https://code.visualstudio.com/)
-- Una cuenta gratis en [Cloudinary](https://cloudinary.com/users/register/free) (para las fotos/videos)
+- (Opcional) Una cuenta gratis en [Cloudinary](https://cloudinary.com/users/register/free), **solo** si vas a subir fotos o videos nuevos desde el panel admin
+
+> **No hace falta ninguna credencial para ver el sitio.** Alcanza con clonar, `cp .env.example .env` (sin tocar nada), crear la base y correr `npm run seed`: precarga los textos, los datos de contacto y las fotos reales del sitio actual. Cloudinary y el usuario administrador son opcionales y solo habilitan, respectivamente, subir archivos nuevos y entrar al panel.
 
 No necesitás instalar ninguna base de datos: usamos SQLite, que es un archivo
 local que Prisma crea solo.
@@ -31,7 +33,7 @@ lo corras en desarrollo.
 
 ---
 
-## Paso 2 — Crear tu cuenta de Cloudinary
+## Paso 2 — Crear tu cuenta de Cloudinary (opcional)
 
 1. Andá a https://cloudinary.com/users/register/free y creá una cuenta gratis.
 2. Una vez adentro, en el **Dashboard** vas a ver tres datos que necesitás:
