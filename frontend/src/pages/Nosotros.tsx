@@ -28,7 +28,9 @@ export default function Nosotros() {
     <PublicLayout>
       {/* Encabezado premium: fondo plano chocolate con acento mostaza */}
       <section className="bg-brand-dark py-16 md:py-20 text-center px-4">
-        <h1 className="text-4xl md:text-5xl font-extrabold uppercase tracking-tight text-white">Nosotros</h1>
+        <h1 className="font-display text-4xl md:text-5xl font-extrabold uppercase tracking-tightest text-white">
+          Nosotros
+        </h1>
         <span className="inline-block mt-4 w-24 h-1 bg-brand-mustard rounded-full" />
       </section>
 
@@ -52,7 +54,7 @@ export default function Nosotros() {
         </svg>
 
         <p className="font-script text-6xl md:text-7xl text-brand leading-none mb-1 -rotate-2">¡Hola!</p>
-        <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-brand-dark mb-10">
+        <h2 className="font-display text-3xl md:text-5xl font-black uppercase tracking-tightest text-brand-dark mb-10">
           Somos{" "}
           <span className="font-script italic normal-case tracking-normal text-brand-mustard">
             Herminia y Oscar
@@ -60,14 +62,16 @@ export default function Nosotros() {
         </h2>
 
         <div className="relative max-w-lg mx-auto mb-12">
-          {/* Manchas de color detrás de la foto, como marco/protagonismo */}
-          <span className="absolute -top-6 -left-6 w-28 h-28 md:w-36 md:h-36 rounded-full bg-brand-mustard/90 -z-10" />
-          <span className="absolute -bottom-8 -right-4 w-36 h-36 md:w-44 md:h-44 rounded-full bg-brand/90 -z-10" />
+          {/* Manchas de color detrás de la foto. Iban con -z-10, que las mandaba
+              detrás del fondo de la sección y no se veían nunca; ahora quedan
+              entre el fondo y la foto. */}
+          <span className="absolute -top-6 -left-6 w-28 h-28 md:w-36 md:h-36 rounded-full bg-brand-mustard/90 z-0" />
+          <span className="absolute -bottom-8 -right-4 w-36 h-36 md:w-44 md:h-44 rounded-full bg-brand/90 z-0" />
           {photo && (
             <img
               src={photo.url}
               alt="Herminia y Oscar"
-              className="relative mx-auto h-[360px] sm:h-[460px] md:h-[600px] w-auto object-contain drop-shadow-2xl"
+              className="relative z-10 mx-auto h-[360px] sm:h-[460px] md:h-[600px] w-auto object-contain drop-shadow-2xl"
             />
           )}
         </div>
@@ -86,45 +90,59 @@ export default function Nosotros() {
         </div>
       </section>
 
-      {/* Historia completa: dos tarjetas foto + texto conectadas, a todo el
-          ancho de la página, como la referencia Banh Mi World que mandó el
-          cliente (mitad foto a sangre, mitad panel de color con el texto) */}
-      {/* Tarjeta 1: foto a la izquierda, texto a la derecha */}
+      {/* Historia completa: dos tarjetas foto + texto a todo el ancho.
+          Tarjeta 1: foto a la izquierda, panel chocolate a la derecha. */}
       <section className="grid md:grid-cols-2">
-        <div className="h-72 md:h-auto md:min-h-[560px]">
-          {dreamImg && (
-            <img src={dreamImg.url} alt="" className="w-full h-full object-cover" />
-          )}
+        <div className="relative h-72 overflow-hidden md:h-auto md:min-h-[600px]">
+          {dreamImg && <img src={dreamImg.url} alt="" className="h-full w-full object-cover" />}
+          {/* Degradé en la costura para que la foto no choque contra el panel. */}
+          <span className="pointer-events-none absolute inset-y-0 right-0 hidden w-24 bg-gradient-to-l from-brand-dark to-transparent md:block" />
         </div>
-        <div className="bg-brand-dark text-white p-8 sm:p-12 md:p-16 flex flex-col justify-center">
-          <h3 className="text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-tight leading-tight mb-5">
-            Dejarlo todo para seguir{" "}
-            <span className="font-script italic normal-case tracking-normal text-brand-mustard">
-              nuestro sueño
-            </span>
+        <div className="relative flex flex-col justify-center overflow-hidden bg-brand-dark p-8 text-white sm:p-12 md:p-16">
+          <span
+            aria-hidden="true"
+            className="font-display pointer-events-none absolute right-6 top-2 text-[7rem] font-extrabold leading-none text-white/5 md:text-[10rem]"
+          >
+            01
+          </span>
+          <p className="font-script relative -rotate-2 text-4xl leading-none text-brand-mustard md:text-5xl">
+            Dejarlo todo
+          </p>
+          <h3 className="font-display relative mt-2 text-3xl font-extrabold uppercase leading-[0.95] tracking-tightest md:text-4xl lg:text-5xl">
+            para seguir nuestro sueño
           </h3>
-          <p className="text-white/90 leading-relaxed whitespace-pre-line">
-            {loading ? "Cargando..." : get("nosotros_dream")}
+          <span className="relative mt-5 block h-1 w-16 rounded-full bg-brand" />
+          <p className="relative mt-6 max-w-prose whitespace-pre-line leading-relaxed text-white/75">
+            {get("nosotros_dream")}
           </p>
         </div>
       </section>
 
-      {/* Tarjeta 2: texto a la izquierda, foto a la derecha (alternada) */}
+      {/* Tarjeta 2: alterna lado y color. El panel claro corta la monotonía
+          del chocolate y le devuelve aire a la página. */}
       <section className="grid md:grid-cols-2">
-        <div className="bg-brand-dark text-white p-8 sm:p-12 md:p-16 flex flex-col justify-center order-2 md:order-1">
-          <h3 className="text-2xl md:text-3xl lg:text-4xl font-black uppercase tracking-tight leading-tight mb-5">
-            ¿Por qué{" "}
-            <span className="font-script italic normal-case tracking-normal text-brand-mustard">
-              Fusión con Sazón
-            </span>
-            ?
+        <div
+          className="relative order-2 flex flex-col justify-center overflow-hidden p-8 sm:p-12 md:order-1 md:p-16"
+          style={{ background: "linear-gradient(180deg,#FDF3E4 0%,#FAF8F5 100%)" }}
+        >
+          <span
+            aria-hidden="true"
+            className="font-display pointer-events-none absolute right-6 top-2 text-[7rem] font-extrabold leading-none text-brand-dark/5 md:text-[10rem]"
+          >
+            02
+          </span>
+          <p className="font-script relative -rotate-2 text-4xl leading-none text-brand md:text-5xl">¿Por qué</p>
+          <h3 className="font-display relative mt-2 text-3xl font-extrabold uppercase leading-[0.95] tracking-tightest text-brand-dark md:text-4xl lg:text-5xl">
+            Fusión con Sazón?
           </h3>
-          <p className="text-white/90 leading-relaxed whitespace-pre-line">
-            {loading ? "Cargando..." : get("nosotros_why")}
+          <span className="relative mt-5 block h-1 w-16 rounded-full bg-brand-mustard" />
+          <p className="relative mt-6 max-w-prose whitespace-pre-line leading-relaxed text-brand-dark/70">
+            {get("nosotros_why")}
           </p>
         </div>
-        <div className="h-72 md:h-auto md:min-h-[560px] order-1 md:order-2">
-          {whyImg && <img src={whyImg.url} alt="" className="w-full h-full object-cover" />}
+        <div className="relative order-1 h-72 overflow-hidden md:order-2 md:h-auto md:min-h-[600px]">
+          {whyImg && <img src={whyImg.url} alt="" className="h-full w-full object-cover" />}
+          <span className="pointer-events-none absolute inset-y-0 left-0 hidden w-24 bg-gradient-to-r from-[#FDF3E4] to-transparent md:block" />
         </div>
       </section>
 
