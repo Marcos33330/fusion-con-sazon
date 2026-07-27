@@ -7,10 +7,12 @@ interface Props {
   category?: string;
 }
 
-// Galería sin "tarjeta": la foto es la protagonista, sin panel blanco ni
-// marco que le reste protagonismo. Solo un borde redondeado sutil, sombra
-// suave y un acento de color fino abajo, con el título (si existe) apareciendo
-// como overlay al pasar el mouse.
+// Galería tipo mosaico: cada foto conserva su proporción real.
+//
+// Antes la grilla forzaba aspect-[4/5] con object-cover, así que las piezas
+// anchas (los combos, que son banners horizontales) se recortaban y perdían
+// el precio y el logo. Con columnas CSS cada imagen entra completa y la
+// altura de la fila deja de imponerse sobre el contenido.
 export default function MediaGrid({ page, category }: Props) {
   const [items, setItems] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,31 +28,31 @@ export default function MediaGrid({ page, category }: Props) {
   }, [page, category]);
 
   if (loading) {
-    return <p className="text-center text-gray-500 py-8">Cargando galería...</p>;
+    return <p className="py-8 text-center text-brand-dark/50">Cargando galería...</p>;
   }
 
   if (items.length === 0) {
-    return <p className="text-center text-gray-500 py-8">Todavía no hay contenido cargado acá.</p>;
+    return <p className="py-8 text-center text-brand-dark/50">Todavía no hay contenido cargado acá.</p>;
   }
 
   const accents = ["#E80541", "#FFA610", "#331806"];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 md:gap-8">
+    <div className="columns-1 gap-5 sm:columns-2 md:gap-7 lg:columns-3">
       {items.map((item, i) => (
-        <div
+        <figure
           key={item.id}
-          className="group relative aspect-[4/5] w-full rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300"
+          className="group relative mb-5 break-inside-avoid overflow-hidden rounded-2xl bg-brand-gray shadow-warm transition-shadow duration-300 hover:shadow-warm-lg md:mb-7"
         >
           {item.type === "IMAGE" ? (
             <img
               src={item.url}
               alt={item.title ?? ""}
               loading="lazy"
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              className="block h-auto w-full transition-transform duration-500 group-hover:scale-[1.04]"
             />
           ) : (
-            <video src={item.url} controls className="w-full h-full object-cover" preload="metadata" />
+            <video src={item.url} controls className="block h-auto w-full" preload="metadata" />
           )}
 
           {/* Acento de color fino, rotando por foto */}
@@ -61,11 +63,11 @@ export default function MediaGrid({ page, category }: Props) {
 
           {/* Título como overlay al pasar el mouse, sin ocupar espacio fijo */}
           {item.title && (
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-              <p className="w-full p-3 text-white text-xs sm:text-sm font-semibold">{item.title}</p>
-            </div>
+            <figcaption className="absolute inset-0 flex items-end bg-gradient-to-t from-brand-espresso/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <p className="w-full p-4 text-sm font-semibold text-white">{item.title}</p>
+            </figcaption>
           )}
-        </div>
+        </figure>
       ))}
     </div>
   );
