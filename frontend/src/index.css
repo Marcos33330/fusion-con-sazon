@@ -1,18 +1,93 @@
-@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   /* Fondo cálido de marca en vez de blanco puro, elegido por el cliente */
   background-color: #faf8f5;
+  color: #331806;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 /* Fuente script para acentos tipo "the" de la referencia Banh Mi World */
 .font-script {
   font-family: "Caveat", cursive;
+}
+
+/* Títulos grandes: grotesca con carácter, apretada y en mayúsculas. */
+.font-display {
+  font-family: "Bricolage Grotesque", "Manrope", system-ui, sans-serif;
+  font-optical-sizing: auto;
+}
+
+/* Los títulos nunca deben cortar una palabra sola en la última línea. */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+p,
+li {
+  text-wrap: pretty;
+}
+
+/* Selección de texto con el fucsia de marca. */
+::selection {
+  background-color: #e80541;
+  color: #fff;
+}
+
+/* --- Animación de entrada al hacer scroll -------------------------------
+   Los elementos con [data-reveal] arrancan desplazados y transparentes; un
+   IntersectionObserver les agrega .is-visible cuando entran en pantalla.
+   El escalonado se define con transition-delay inline en cada elemento. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .animate-marquee,
+  .animate-marquee-slow,
+  .animate-spin-slow,
+  .animate-float,
+  .animate-float-delayed {
+    animation: none !important;
+  }
+}
+
+/* Textura de grano sutil para que los fondos chocolate no se vean planos. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* Tarjeta tipo "sello postal" (borde festoneado), inspirada en la referencia

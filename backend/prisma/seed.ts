@@ -8,17 +8,30 @@ const CDN = "https://fusionconsazon.uy/wp-content/uploads";
 
 async function main() {
   // --- Admin único -----------------------------------------------------
-  const email = process.env.ADMIN_EMAIL!;
-  const password = process.env.ADMIN_PASSWORD!;
-  const name = process.env.ADMIN_NAME ?? "Administrador";
-  const passwordHash = await bcrypt.hash(password, 12);
+  const adminEmail = process.env.ADMIN_EMAIL?.trim();
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  const adminName = process.env.ADMIN_NAME?.trim() || "Administrador";
 
-  await prisma.adminUser.upsert({
-    where: { email },
-    update: { passwordHash, name },
-    create: { email, passwordHash, name },
-  });
-  console.log(`✅ Admin listo: ${email}`);
+  // El admin es opcional a propósito: el sitio público (textos, fotos,
+  // testimonios, contacto) funciona sin él. Solo hace falta para entrar al
+  // panel, así que quien clone el repo puede ver la página andando sin
+  // inventarse credenciales ni una cuenta de Cloudinary.
+  if (!adminEmail || !adminPassword) {
+    console.warn("⚠️  Sin ADMIN_EMAIL / ADMIN_PASSWORD: no se creó usuario administrador.");
+    console.warn("   El sitio público carga igual. Para entrar al panel, completá esos");
+    console.warn("   valores en backend/.env y volvé a correr `npm run seed`.");
+  } else if (adminPassword.length < 8) {
+    console.error("❌ ADMIN_PASSWORD debe tener al menos 8 caracteres: no se creó el admin.");
+    console.error("   El resto del contenido se cargó igual.");
+  } else {
+    const passwordHash = await bcrypt.hash(adminPassword, 12);
+    await prisma.adminUser.upsert({
+      where: { email: adminEmail },
+      update: { passwordHash, name: adminName },
+      create: { email: adminEmail, passwordHash, name: adminName },
+    });
+    console.log(`✅ Admin listo: ${adminEmail}`);
+  }
 
   // --- Bloques de texto (contenido real del sitio actual) --------------
   const contentBlocks = [
@@ -136,7 +149,7 @@ async function main() {
     order: number;
   }[] = [
     // Nosotros
-    { page: "NOSOTROS", type: "IMAGE", url: `${CDN}/2025/01/foto-nosotros-2.png`, order: 0 },
+    { page: "NOSOTROS", type: "IMAGE", url: "/nosotros.webp", order: 0 },
     { page: "NOSOTROS", type: "IMAGE", url: `${CDN}/2025/01/FOTOS_0003_Grupo-5-576x1024.jpg`, order: 1 },
     { page: "NOSOTROS", type: "IMAGE", url: `${CDN}/2025/01/FOTOS_0013_Grupo-24-576x1024.jpg`, order: 2 },
 
