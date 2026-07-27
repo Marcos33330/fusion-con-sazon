@@ -51,12 +51,14 @@ export default function AdminTestimonials() {
         <input
           type="text"
           placeholder="Nombre del cliente"
+            aria-label="Nombre del cliente"
           value={author}
           onChange={(e) => setAuthor(e.target.value)}
           className="w-full border rounded px-3 py-2 text-sm"
         />
         <textarea
           placeholder="Texto del testimonio"
+            aria-label="Texto del testimonio"
           value={text}
           onChange={(e) => setText(e.target.value)}
           rows={3}

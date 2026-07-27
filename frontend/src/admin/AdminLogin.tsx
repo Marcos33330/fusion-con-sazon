@@ -31,8 +31,9 @@ export default function AdminLogin() {
 
         {error && <p className="bg-red-50 text-red-600 text-sm rounded p-2 mb-4">{error}</p>}
 
-        <label className="block text-sm font-medium mb-1">Email</label>
+        <label htmlFor="login-email" className="block text-sm font-medium mb-1">Email</label>
         <input
+          id="login-email"
           type="email"
           required
           value={email}
@@ -40,8 +41,9 @@ export default function AdminLogin() {
           className="w-full border rounded px-3 py-2 mb-4 focus:outline-brand"
         />
 
-        <label className="block text-sm font-medium mb-1">Contraseña</label>
+        <label htmlFor="login-password" className="block text-sm font-medium mb-1">Contraseña</label>
         <input
+          id="login-password"
           type="password"
           required
           value={password}

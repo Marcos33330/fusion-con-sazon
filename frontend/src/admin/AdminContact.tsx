@@ -41,8 +41,9 @@ export default function AdminContact() {
       <h2 className="text-xl font-bold">Datos de contacto</h2>
 
       <div>
-        <label className="block text-sm font-medium mb-1">Teléfono</label>
+        <label htmlFor="contact-phone" className="block text-sm font-medium mb-1">Teléfono</label>
         <input
+          id="contact-phone"
           value={form.phone ?? ""}
           onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
           className="w-full border rounded px-3 py-2 text-sm"
@@ -50,8 +51,9 @@ export default function AdminContact() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1">WhatsApp (con código de país, ej: +598...)</label>
+        <label htmlFor="contact-whatsapp" className="block text-sm font-medium mb-1">WhatsApp (con código de país, ej: +598...)</label>
         <input
+          id="contact-whatsapp"
           value={form.whatsapp ?? ""}
           onChange={(e) => setForm((f) => ({ ...f, whatsapp: e.target.value }))}
           className="w-full border rounded px-3 py-2 text-sm"
@@ -59,8 +61,9 @@ export default function AdminContact() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1">Dirección / zona</label>
+        <label htmlFor="contact-address" className="block text-sm font-medium mb-1">Dirección / zona</label>
         <input
+          id="contact-address"
           value={form.address ?? ""}
           onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
           className="w-full border rounded px-3 py-2 text-sm"
@@ -68,8 +71,9 @@ export default function AdminContact() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1">Facebook (URL completa)</label>
+        <label htmlFor="contact-facebook" className="block text-sm font-medium mb-1">Facebook (URL completa)</label>
         <input
+          id="contact-facebook"
           value={form.facebookUrl ?? ""}
           onChange={(e) => setForm((f) => ({ ...f, facebookUrl: e.target.value }))}
           className="w-full border rounded px-3 py-2 text-sm"
@@ -77,8 +81,9 @@ export default function AdminContact() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1">Instagram (URL completa)</label>
+        <label htmlFor="contact-instagram" className="block text-sm font-medium mb-1">Instagram (URL completa)</label>
         <input
+          id="contact-instagram"
           value={form.instagramUrl ?? ""}
           onChange={(e) => setForm((f) => ({ ...f, instagramUrl: e.target.value }))}
           className="w-full border rounded px-3 py-2 text-sm"

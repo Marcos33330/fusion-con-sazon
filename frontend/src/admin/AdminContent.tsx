@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api } from "../api/client";
 import { ContentDict } from "../types";
 
@@ -12,7 +12,7 @@ const EDITABLE_BLOCKS: { key: string; label: string; page: string }[] = [
 ];
 
 export default function AdminContent() {
-  const [content, setContent] = useState<ContentDict>({});
+  const contentRef = useRef<ContentDict>({});
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [savingKey, setSavingKey] = useState<string | null>(null);
   const [savedKey, setSavedKey] = useState<string | null>(null);
@@ -22,7 +22,7 @@ export default function AdminContent() {
     api
       .get<ContentDict>("/content")
       .then((data) => {
-        setContent(data);
+        contentRef.current = data;
         const initialDrafts: Record<string, string> = {};
         for (const block of EDITABLE_BLOCKS) {
           initialDrafts[block.key] = data[block.key]?.body ?? "";
@@ -55,10 +55,11 @@ export default function AdminContent() {
       {EDITABLE_BLOCKS.map((block) => (
         <div key={block.key} className="bg-white rounded-lg shadow p-5">
           <div className="flex items-center justify-between mb-2">
-            <label className="font-semibold">{block.label}</label>
+            <label htmlFor={`content-${block.key}`} className="font-semibold">{block.label}</label>
             <span className="text-xs text-gray-400">Página: {block.page}</span>
           </div>
           <textarea
+            id={`content-${block.key}`}
             value={drafts[block.key] ?? ""}
             onChange={(e) => setDrafts((d) => ({ ...d, [block.key]: e.target.value }))}
             rows={4}

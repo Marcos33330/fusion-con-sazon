@@ -112,16 +112,17 @@ export default function AdminMedia() {
       <form onSubmit={handleUpload} className="bg-white rounded-lg shadow p-5 space-y-3">
         <h3 className="font-semibold">Subir nueva foto o video a "{currentPageMeta.label}"</h3>
         {error && <p className="bg-red-50 text-red-600 text-sm rounded p-2">{error}</p>}
-        <input ref={fileInputRef} type="file" accept="image/*,video/*" className="block text-sm" />
+        <input ref={fileInputRef} type="file" accept="image/*,video/*" aria-label="Seleccionar archivo para subir" className="block text-sm" />
         <input
           type="text"
           placeholder="Título / descripción (opcional)"
+                aria-label="Título o descripción de la foto o video"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="w-full border rounded px-3 py-2 text-sm"
         />
         {currentPageMeta.hasCategory && (
-          <select value={category} onChange={(e) => setCategory(e.target.value)} className="w-full border rounded px-3 py-2 text-sm">
+          <select value={category} onChange={(e) => setCategory(e.target.value)} aria-label="Categoría del plato" className="w-full border rounded px-3 py-2 text-sm">
             <option value="">Sin categoría</option>
             {CATERING_CATEGORIES.map((c) => (
               <option key={c} value={c}>
@@ -160,6 +161,7 @@ export default function AdminMedia() {
                   <select
                     value={item.category ?? ""}
                     onChange={(e) => handleCategoryChange(item.id, e.target.value)}
+                      aria-label="Cambiar categoría"
                     className="w-full border rounded px-2 py-1 text-xs"
                   >
                     <option value="">Sin categoría</option>
@@ -186,6 +188,7 @@ export default function AdminMedia() {
                 </div>
                 <input
                   ref={(el) => (replaceInputRefs.current[item.id] = el)}
+                  aria-label="Reemplazar archivo"
                   type="file"
                   accept="image/*,video/*"
                   className="hidden"
