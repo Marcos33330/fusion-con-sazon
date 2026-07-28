@@ -1,0 +1,35 @@
+{
+  "name": "Fusión con Sazón",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+
+  // Se ejecuta una sola vez, cuando se crea el codespace: instala las
+  // dependencias de las dos partes, prepara Prisma, crea la base SQLite y
+  // carga el contenido inicial. Cuando termina, solo queda "npm run dev".
+  "postCreateCommand": "npm install && npm run setup",
+
+  "forwardPorts": [5173, 4000],
+  "portsAttributes": {
+    "5173": {
+      "label": "Sitio (frontend)",
+      "onAutoForward": "openPreview"
+    },
+    "4000": {
+      "label": "API (backend)",
+      "onAutoForward": "silent"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Prisma.prisma",
+        "bradlc.vscode-tailwindcss",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "files.eol": "\n"
+      }
+    }
+  }
+}

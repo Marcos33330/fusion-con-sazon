@@ -1,148 +1,211 @@
 # Fusión con Sazón — sitio propio con panel de administrador
 
 Réplica de [fusionconsazon.uy](https://fusionconsazon.uy/) con backend, base de
-datos y un panel de administrador para subir, reemplazar y editar fotos, videos
-y textos de todas las páginas (Inicio, Nosotros, Tortas y Postres, Catering,
-Eventos, Contacto).
+datos y un panel de administrador para subir, reemplazar, reordenar y editar
+fotos, videos y textos de todas las páginas (Inicio, Nosotros, Tortas y Postres,
+Catering, Eventos, Contacto).
 
 Ver `ARCHITECTURE.md` para el detalle de la arquitectura y `SECURITY-CHECKLIST.md`
 antes de pasar a producción.
+
+> **No hace falta ninguna credencial para ver el sitio.** Alcanza con copiar
+> `.env.example` a `.env` sin tocar nada, crear la base y correr `npm run seed`:
+> precarga los textos, los datos de contacto y las fotos reales del sitio actual.
+> Cloudinary y el usuario administrador son **opcionales** y solo habilitan,
+> respectivamente, subir archivos nuevos y entrar al panel.
+
+El proyecto tiene dos partes independientes, `backend/` y `frontend/`, y cada
+una corre en su propia terminal. **Siempre vas a necesitar dos terminales
+abiertas en paralelo.**
+
+No hace falta instalar ninguna base de datos: usamos SQLite, que es un archivo
+local que Prisma crea solo.
+
+---
+
+# Opción A — GitHub Codespaces (lo más rápido)
+
+No requiere instalar nada en tu computadora. Abrí el codespace desde el botón
+verde **Code → Codespaces** del repositorio en GitHub.
+
+## Primera vez
+
+**No tenés que hacer nada.** El archivo `.devcontainer/devcontainer.json` corre
+la instalación completa sola al crearse el codespace: dependencias de las dos
+partes, Prisma, la base SQLite y el contenido inicial.
+
+Esperá a que termine (lo ves en la notificación de VS Code) y andá al paso
+siguiente.
+
+## Para levantar el sitio
+
+Un solo comando, en una sola terminal:
+
+```bash
+npm run dev
+```
+
+Arranca el backend y el frontend juntos, con la salida de cada uno en su color.
+Esperá el `Local: http://localhost:5173/`; Codespaces te va a ofrecer abrir ese
+puerto en el navegador. Para cortar los dos, `Ctrl+C`.
+
+Si preferís tenerlos en terminales separadas: `npm run dev:backend` en una y
+`npm run dev:frontend` en otra.
+
+> **Ojo:** el devcontainer solo se aplica a codespaces **nuevos**. Si ya tenías
+> uno abierto de antes, o lo reconstruís con `Rebuild Container`, o corrés la
+> instalación a mano una vez: `npm install && npm run setup`.
+
+## Compartir el sitio con alguien (demo)
+
+Por defecto los puertos son privados. Para que otra persona pueda abrirlo:
+
+1. Andá a la pestaña **PORTS** del panel inferior.
+2. Clic derecho sobre el puerto **5173** → **Port Visibility** → **Public**.
+3. Copiá la **Forwarded Address**. Esa URL la puede abrir cualquiera.
+
+Dejá el puerto **4000 en Private**: no hace falta exponerlo, porque Vite reenvía
+`/api` internamente.
+
+Tené en cuenta que es un servidor de desarrollo: se cae cuando el codespace se
+detiene (a los 30 minutos de inactividad por defecto), va más lento que el sitio
+real, y consume horas de tu cuota de Codespaces. Volvé el puerto a **Private**
+cuando termines de mostrarlo.
+
+---
+
+# Opción B — En tu computadora
 
 ## Qué necesitás instalado
 
 - [Node.js](https://nodejs.org/) versión 20 o superior (`node -v` para verificar)
 - [Visual Studio Code](https://code.visualstudio.com/)
-- (Opcional) Una cuenta gratis en [Cloudinary](https://cloudinary.com/users/register/free), **solo** si vas a subir fotos o videos nuevos desde el panel admin
+- [Git](https://git-scm.com/)
 
-> **No hace falta ninguna credencial para ver el sitio.** Alcanza con clonar, `cp .env.example .env` (sin tocar nada), crear la base y correr `npm run seed`: precarga los textos, los datos de contacto y las fotos reales del sitio actual. Cloudinary y el usuario administrador son opcionales y solo habilitan, respectivamente, subir archivos nuevos y entrar al panel.
-
-No necesitás instalar ninguna base de datos: usamos SQLite, que es un archivo
-local que Prisma crea solo.
-
----
-
-## Paso 1 — Abrir el proyecto
-
-1. Descomprimí la carpeta `fusion-con-sazon` donde prefieras.
-2. Abrí VS Code → `Archivo > Abrir carpeta...` → seleccioná `fusion-con-sazon`.
-3. Abrí una terminal integrada: `Terminal > Nueva terminal` (o `Ctrl+ñ` / `` Ctrl+` ``).
-
-El proyecto tiene dos partes independientes: `backend/` y `frontend/`. Vas a
-necesitar **dos terminales abiertas en paralelo** (una por cada una) cuando
-lo corras en desarrollo.
-
----
-
-## Paso 2 — Crear tu cuenta de Cloudinary (opcional)
-
-1. Andá a https://cloudinary.com/users/register/free y creá una cuenta gratis.
-2. Una vez adentro, en el **Dashboard** vas a ver tres datos que necesitás:
-   `Cloud name`, `API Key` y `API Secret`. Guardalos, los usamos en el Paso 3.
-
----
-
-## Paso 3 — Configurar el backend
-
-En la terminal:
+## Paso 1 — Clonar y abrir
 
 ```bash
-cd backend
+git clone https://github.com/Marcos33330/fusion-con-sazon.git
+cd fusion-con-sazon
+```
+
+Abrí VS Code → `Archivo > Abrir carpeta...` → seleccioná `fusion-con-sazon`, y
+abrí una terminal integrada con `Terminal > Nueva terminal`.
+
+> **Cuidado con la ubicación:** no lo pongas dentro de OneDrive, Dropbox o
+> Google Drive. `node_modules` son decenas de miles de archivos y la
+> sincronización genera bloqueos que rompen instalaciones y builds. Algo como
+> `C:\dev\fusion-con-sazon` va bien.
+
+> **Cuidado con la terminal:** VS Code en Windows puede abrir PowerShell o Git
+> Bash. En **Git Bash** las rutas van con barra normal (`cd ../frontend`), no
+> con barra invertida (`cd ..\frontend`), y los espacios hay que escaparlos con
+> `\`. Si te da `No such file or directory`, es casi siempre esto.
+
+## Paso 2 — Instalar (una sola vez)
+
+Desde la **raíz** del proyecto:
+
+```bash
 npm install
+npm run setup
 ```
 
-Ahora creá tu archivo de variables de entorno copiando el ejemplo:
+`npm run setup` crea los dos `.env` (si no existen, no pisa los tuyos), instala
+las dependencias de backend y frontend, prepara Prisma, crea la base SQLite y
+carga el contenido inicial.
 
-```bash
-# Windows (PowerShell)
-copy .env.example .env
-
-# Mac/Linux
-cp .env.example .env
-```
-
-Abrí `backend/.env` en VS Code y completá:
-
-- `JWT_SECRET`: generá un valor aleatorio corriendo en la terminal:
-  ```bash
-  node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
-  ```
-  y pegá el resultado ahí.
-- `ADMIN_EMAIL` / `ADMIN_PASSWORD` / `ADMIN_NAME`: el email y contraseña con
-  los que vas a entrar al panel de administrador. Usá una contraseña fuerte
-  (mínimo 8 caracteres, mejor si son más y con símbolos).
-- `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`:
-  los tres datos del Paso 2.
-- El resto de los valores (`DATABASE_URL`, `PORT`, `FRONTEND_URL`) podés
-  dejarlos como están para desarrollo local.
-
-### Crear la base de datos y cargar el contenido inicial
-
-```bash
-npx prisma generate
-npx prisma migrate dev --name init
-npm run seed
-```
-
-`npm run seed` crea tu usuario administrador y precarga los textos, datos de
-contacto y fotos/videos de referencia (las mismas URLs que ya usa el sitio
-actual), para que la página no arranque vacía. Podés reemplazar cada foto o
-video después desde el panel admin.
-
-### Levantar el backend
+## Paso 3 — Levantar el sitio
 
 ```bash
 npm run dev
 ```
 
-Deberías ver: `✅ Backend corriendo en http://localhost:4000`. Dejá esta
-terminal abierta.
+Un solo comando levanta los dos servidores. Esperá el
+`Local: http://localhost:5173/` y abrí esa URL: ahí está tu sitio. Para cortar
+los dos, `Ctrl+C`.
 
-**Probarlo:** abrí http://localhost:4000/api/health en el navegador. Tiene
-que responder `{"ok":true}`.
+Si los preferís separados: `npm run dev:backend` en una terminal y
+`npm run dev:frontend` en otra.
 
----
-
-## Paso 4 — Configurar y levantar el frontend
-
-Abrí una **segunda terminal** en VS Code (`Terminal > Nueva terminal`):
-
-```bash
-cd frontend
-npm install
-copy .env.example .env    # o "cp .env.example .env" en Mac/Linux
-npm run dev
-```
-
-Vas a ver algo como `Local: http://localhost:5173/`. Abrí esa URL en el
-navegador — ahí está tu sitio.
-
-**Probarlo:** navegá entre Inicio, Nosotros, Tortas y Postres, Catering y
-Eventos. Deberías ver las fotos de referencia cargadas por el seed.
+**Probar el backend:** abrí http://localhost:4000/api/health. Tiene que
+responder `{"ok":true}`.
 
 ---
 
-## Paso 5 — Entrar al panel de administrador
+# Configuración (`backend/.env`)
 
-1. Andá a http://localhost:5173/admin/login
-2. Ingresá el `ADMIN_EMAIL` y `ADMIN_PASSWORD` que pusiste en `backend/.env`.
-3. Desde ahí podés:
-   - **Contenido**: editar los textos de cada página.
-   - **Fotos y videos**: subir nuevos, reemplazar los existentes (botón
-     "Reemplazar"), asignarles categoría (en Catering) o eliminarlos.
-   - **Testimonios**: agregar, publicar/ocultar o borrar.
-   - **Contacto**: actualizar teléfono, WhatsApp, dirección y redes sociales.
+Copiando `.env.example` tal cual ya funciona todo el sitio público. Estas son
+las variables por si querés cambiar algo:
+
+## Obligatorias
+
+| Variable | Para qué |
+|---|---|
+| `DATABASE_URL` | Ruta del archivo SQLite. Dejala como está en desarrollo. |
+| `PORT` | Puerto del backend (4000). |
+| `FRONTEND_URL` | Origen permitido por CORS. En desarrollo, `http://localhost:5173` **sin barra al final**. |
+| `NODE_ENV` | `development` en local. `production` activa cookies seguras y oculta detalles de errores. |
+
+## Opcionales — panel de administrador
+
+| Variable | Para qué |
+|---|---|
+| `JWT_SECRET` | Firma la sesión del admin. Si lo dejás vacío en desarrollo se genera uno efímero y **la sesión se cierra en cada reinicio del backend**. En producción es obligatorio. Generalo con:<br>`node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"` |
+| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Credenciales del único administrador. Las lee `npm run seed` para crear el usuario. Si las dejás vacías, el seed carga todo el contenido igual y simplemente no crea admin. La contraseña necesita **8 caracteres o más**. |
+| `ADMIN_NAME` | Nombre que se muestra en el panel. |
+
+## Opcionales — Cloudinary
+
+`CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` y `CLOUDINARY_API_SECRET` solo
+hacen falta para **subir o reemplazar** archivos desde el panel. Las fotos que
+precarga el seed son URLs públicas del sitio actual, así que se ven sin
+configurar nada. Si las definís, tienen que estar las tres. Cuenta gratis en
+[cloudinary.com](https://cloudinary.com/users/register/free); los valores están
+en el Dashboard.
+
+---
+
+# El panel de administrador
+
+Entrá a `/admin/login` (por ejemplo http://localhost:5173/admin/login) con el
+`ADMIN_EMAIL` y `ADMIN_PASSWORD` de tu `.env`. Si nunca los completaste, primero
+llenalos y volvé a correr `npm run seed`.
+
+- **Contenido** — los textos de cada página, agrupados por sección. Los campos
+  que dejes vacíos muestran el texto por defecto (aparece en gris como
+  referencia).
+- **Fotos y videos** — subir, reemplazar, eliminar, poner título, asignar
+  categoría (en Catering) y **reordenar**.
+- **Testimonios** — agregar, publicar/ocultar o borrar.
+- **Contacto** — teléfono, WhatsApp, dirección y redes sociales.
 
 Los cambios se ven al instante en el sitio público, sin reiniciar nada.
 
+> **El orden de las fotos importa.** El sitio decide dónde va cada una según su
+> posición: la primera de *Tortas y Postres* es la foto grande del hero, la
+> primera de *Nosotros* es la de la pareja, y así. El panel te lo indica con una
+> etiqueta sobre cada foto y con los botones **← Antes / Después →**.
+
 ---
 
-## Comandos útiles
+# Comandos útiles
+
+| Comando (desde la **raíz**) | Qué hace |
+|---|---|
+| `npm run dev` | Levanta backend y frontend juntos |
+| `npm run dev:backend` / `npm run dev:frontend` | Levanta uno solo |
+| `npm run setup` | Instalación completa: `.env`, dependencias, base y contenido |
+| `npm run seed` | Recarga el contenido inicial y crea/actualiza el admin |
+| `npm run typecheck` | Verifica el TypeScript de las dos partes |
+| `npm run build` | Compila backend y frontend para producción |
 
 | Comando (dentro de `backend/`) | Qué hace |
 |---|---|
 | `npm run dev` | Levanta el backend en modo desarrollo (recarga sola) |
-| `npm run prisma:studio` | Abre una interfaz visual para ver/editar la base de datos |
-| `npm run typecheck` | Verifica que el código TypeScript no tenga errores |
+| `npm run seed` | Recarga el contenido inicial y crea/actualiza el admin |
+| `npm run prisma:studio` | Interfaz visual para ver y editar la base de datos |
+| `npm run typecheck` | Verifica que el TypeScript no tenga errores |
 | `npm run build` / `npm start` | Compila y corre la versión de producción |
 
 | Comando (dentro de `frontend/`) | Qué hace |
@@ -153,33 +216,55 @@ Los cambios se ven al instante en el sitio público, sin reiniciar nada.
 
 ---
 
-## Errores comunes
+# Errores comunes
 
-- **"No se puede conectar al backend" / la página no carga datos**: confirmá
-  que la terminal del backend siga corriendo y que `frontend/.env` tenga
-  `VITE_API_URL=http://localhost:4000/api`.
-- **Error de CORS en la consola del navegador**: revisá que `FRONTEND_URL`
-  en `backend/.env` sea exactamente `http://localhost:5173` (sin barra al
-  final).
-- **"JWT_SECRET debe tener al menos 16 caracteres"**: te faltó generar y
-  pegar el valor del Paso 3.
-- **Falla la subida de fotos/videos**: revisá que las tres variables de
-  Cloudinary en `backend/.env` sean correctas (copialas de nuevo del
-  Dashboard, sin espacios de más).
+**`Could not read package.json`** — estás parado en la raíz del repo. Los
+`package.json` viven en `backend/` y en `frontend/`, nunca en la raíz. Hacé `cd`
+a la carpeta correcta.
+
+**`No such file or directory` al hacer `cd`** — estás en Git Bash usando barras
+invertidas. Usá `cd ../frontend`, y escapá los espacios: `cd mi\ carpeta`.
+
+**La página carga pero sin fotos ni textos** — el backend no está corriendo, o
+`frontend/.env` apunta mal. En local tiene que ser
+`VITE_API_URL="http://localhost:4000/api"`; en Codespaces, `VITE_API_URL="/api"`.
+
+**Error de CORS en la consola** — `FRONTEND_URL` en `backend/.env` tiene que ser
+exactamente el origen del frontend, sin barra al final.
+
+**`"Datos inválidos"` al entrar al panel** — es un error de **formato**, no de
+contraseña incorrecta: el email tiene que tener forma de email y la contraseña
+al menos 8 caracteres. Si las credenciales están mal, el mensaje es
+`"Credenciales inválidas"`.
+
+**`"Credenciales inválidas"` y estás seguro de la contraseña** — puede que el
+usuario no exista. Completá `ADMIN_EMAIL` y `ADMIN_PASSWORD` en `backend/.env` y
+corré `npm run seed`; tiene que decir `✅ Admin listo: tu@email.com`.
+
+**La sesión del panel se cierra sola al reiniciar el backend** — te falta
+definir `JWT_SECRET` en `backend/.env`.
+
+**Falla la subida de fotos o videos** — faltan las tres variables de Cloudinary,
+o alguna está mal copiada. El error del panel te lo dice explícitamente.
 
 ---
 
-## Cuando quieras pasar esto a producción (internet)
+# Cuando quieras pasar esto a producción (internet)
 
-Este README cubre el uso **local**. Para publicarlo en internet vas a
-necesitar además:
+Este README cubre el uso en desarrollo. Para publicarlo vas a necesitar además:
 
-1. Cambiar la base de datos a PostgreSQL (cambiar `provider` en
-   `backend/prisma/schema.prisma` y el `DATABASE_URL`).
-2. Desplegar el backend en un servicio como Render o Railway, y el frontend
-   (carpeta `frontend/dist` generada con `npm run build`) en Vercel, Netlify
-   o Render Static Sites.
-3. Configurar `NODE_ENV=production`, un dominio propio con HTTPS, y repasar
-   `SECURITY-CHECKLIST.md`.
+1. **Cambiar la base a PostgreSQL** (`provider` en `backend/prisma/schema.prisma`
+   y el `DATABASE_URL`). SQLite es un archivo local y la mayoría de los hosts
+   borran el disco en cada despliegue.
+2. **Desplegar el backend** en Render, Railway o similar, y el frontend
+   (`frontend/dist`, generado con `npm run build`) en Vercel, Netlify o Render
+   Static Sites.
+3. **`NODE_ENV=production`**, HTTPS con dominio propio, `JWT_SECRET` nuevo y
+   distinto al de desarrollo, y `FRONTEND_URL` apuntando al dominio real.
+4. Repasar `SECURITY-CHECKLIST.md` completo.
 
-Si querés, puedo ayudarte con ese paso cuando llegue el momento.
+> **Un detalle que conviene prever:** la cookie de sesión del admin usa
+> `SameSite=Strict`. Si el frontend queda en un dominio y el backend en otro, el
+> navegador no la envía y el panel no funciona. La forma limpia de evitarlo es
+> que el backend sirva el `frontend/dist` en producción: un solo servicio, un
+> solo dominio, sin CORS.
