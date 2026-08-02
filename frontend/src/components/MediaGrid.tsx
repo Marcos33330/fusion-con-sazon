@@ -50,7 +50,7 @@ export default function MediaGrid({ page, category }: Props) {
   const accents = ["#E80541", "#FFA610", "#331806"];
 
   return (
-    <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:gap-7">
+    <div className="grid grid-cols-2 gap-7 sm:grid-cols-3 md:gap-10">
       {ordered.map((item, i) => (
         <figure
           key={item.id}
