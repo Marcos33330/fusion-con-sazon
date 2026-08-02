@@ -299,7 +299,7 @@ export default function Home() {
             </FloatingElement>
 
             {/* Chip de reseñas */}
-            <GlassPanel className="absolute -bottom-5 right-4 flex items-center gap-2 !bg-white px-4 py-2.5 !border-transparent">
+            <GlassPanel className="absolute -bottom-5 right-4 flex items-center gap-2 !border-transparent !bg-white/70 px-4 py-2.5">
               <IconGoogle className="h-4 w-4 shrink-0" />
               <span className="text-sm font-extrabold text-brand-dark">5.0</span>
               <span className="text-xs tracking-tighter text-brand-mustard">★★★★★</span>
@@ -336,11 +336,14 @@ export default function Home() {
         <div className="grid gap-6 md:grid-cols-3">
           {foodCards.map((c, i) => (
             <RevealOnScroll key={c.to} delay={i * 110}>
-              <Link
-                to={c.to}
-                className="group relative flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-[1.75rem] bg-brand-dark shadow-warm transition-shadow duration-500 hover:shadow-warm-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+              <TiltCard
+                maxTilt={4}
+                className="group relative aspect-[4/5] overflow-hidden rounded-[1.75rem] bg-brand-dark shadow-warm transition-shadow duration-500 hover:shadow-warm-lg"
               >
-                <TiltCard maxTilt={4} className="absolute inset-0">
+                <Link
+                  to={c.to}
+                  className="absolute inset-0 flex flex-col justify-end focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+                >
                   {c.img && (
                     <img
                       src={c.img}
@@ -351,27 +354,27 @@ export default function Home() {
                   )}
                   {/* Gradiente de protección: garantiza legibilidad sobre cualquier foto. */}
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-espresso via-brand-espresso/55 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-95" />
-                </TiltCard>
 
-                <span
-                  className="absolute left-6 top-6 font-display text-5xl font-extrabold leading-none opacity-70 transition-opacity duration-500 group-hover:opacity-100"
-                  style={{ color: c.accent }}
-                >
-                  0{i + 1}
-                </span>
-
-                <div className="relative p-6 md:p-7">
-                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-mustard">{c.tag}</span>
-                  <h3 className="font-display mt-2 text-2xl font-extrabold uppercase leading-tight tracking-tight text-white md:text-[1.7rem]">
-                    {c.label}
-                  </h3>
-                  <p className="mt-2.5 text-sm leading-relaxed text-white/70">{c.copy}</p>
-                  <span className="mt-4 inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-white">
-                    Ver más
-                    <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
+                  <span
+                    className="absolute left-6 top-6 font-display text-5xl font-extrabold leading-none opacity-70 transition-opacity duration-500 group-hover:opacity-100"
+                    style={{ color: c.accent }}
+                  >
+                    0{i + 1}
                   </span>
-                </div>
-              </Link>
+
+                  <div className="relative p-6 md:p-7">
+                    <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-mustard">{c.tag}</span>
+                    <h3 className="font-display mt-2 text-2xl font-extrabold uppercase leading-tight tracking-tight text-white md:text-[1.7rem]">
+                      {c.label}
+                    </h3>
+                    <p className="mt-2.5 text-sm leading-relaxed text-white/70">{c.copy}</p>
+                    <span className="mt-4 inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-white">
+                      Ver más
+                      <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
+                    </span>
+                  </div>
+                </Link>
+              </TiltCard>
             </RevealOnScroll>
           ))}
         </div>
@@ -462,10 +465,10 @@ export default function Home() {
               key={s.title}
               className="group relative overflow-hidden rounded-[1.5rem] border border-brand-dark/10 bg-white p-8 transition-transform duration-500 hover:-translate-y-1.5"
             >
+              <span className="font-display pointer-events-none absolute -right-2 -top-4 text-[7rem] font-extrabold leading-none text-brand-dark/5 transition-colors duration-500 group-hover:text-brand/10">
+                {i + 1}
+              </span>
               <RevealOnScroll delay={i * 110}>
-                <span className="font-display absolute -right-2 -top-4 text-[7rem] font-extrabold leading-none text-brand-dark/5 transition-colors duration-500 group-hover:text-brand/10">
-                  {i + 1}
-                </span>
                 <span className="relative flex h-11 w-11 items-center justify-center rounded-full bg-brand-mustard font-display text-lg font-extrabold text-brand-dark">
                   {i + 1}
                 </span>
@@ -496,7 +499,7 @@ export default function Home() {
               </h2>
             </RevealOnScroll>
             <RevealOnScroll delay={130}>
-              <GlassPanel className="mt-6 inline-flex items-center gap-2 !bg-white px-5 py-2.5 !border-transparent">
+              <GlassPanel className="mt-6 inline-flex items-center gap-2 !border-transparent !bg-white/70 px-5 py-2.5">
                 <IconGoogle className="h-5 w-5 shrink-0" />
                 <span className="font-extrabold text-brand-dark">5.0</span>
                 <span className="text-sm tracking-tighter text-brand-mustard">★★★★★</span>

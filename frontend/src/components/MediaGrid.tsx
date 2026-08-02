@@ -52,35 +52,36 @@ export default function MediaGrid({ page, category }: Props) {
   return (
     <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:gap-7">
       {ordered.map((item, i) => (
-        <TiltCard
+        <figure
           key={item.id}
-          maxTilt={5}
           className="group relative aspect-square overflow-hidden rounded-2xl bg-brand-gray shadow-warm transition-shadow duration-300 hover:shadow-warm-lg"
         >
-          {item.type === "IMAGE" ? (
-            <img
-              src={item.url}
-              alt={item.title ?? ""}
-              loading="lazy"
-              className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.04]"
-            />
-          ) : (
-            <video src={item.url} controls className="h-full w-full object-cover" preload="metadata" />
-          )}
+          <TiltCard maxTilt={5} className="h-full w-full">
+            {item.type === "IMAGE" ? (
+              <img
+                src={item.url}
+                alt={item.title ?? ""}
+                loading="lazy"
+                className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.04]"
+              />
+            ) : (
+              <video src={item.url} controls className="h-full w-full object-cover" preload="metadata" />
+            )}
 
-          {/* Acento de color fino, rotando por foto */}
-          <span
-            className="absolute inset-x-0 bottom-0 h-1.5"
-            style={{ backgroundColor: accents[i % accents.length] }}
-          />
+            {/* Acento de color fino, rotando por foto */}
+            <span
+              className="absolute inset-x-0 bottom-0 h-1.5"
+              style={{ backgroundColor: accents[i % accents.length] }}
+            />
+          </TiltCard>
 
           {/* Título como overlay al pasar el mouse, sin ocupar espacio fijo */}
           {item.title && (
-            <figcaption className="absolute inset-0 flex items-end bg-gradient-to-t from-brand-espresso/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <figcaption className="pointer-events-none absolute inset-0 flex items-end bg-gradient-to-t from-brand-espresso/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
               <p className="w-full p-4 text-sm font-semibold text-white">{item.title}</p>
             </figcaption>
           )}
-        </TiltCard>
+        </figure>
       ))}
     </div>
   );

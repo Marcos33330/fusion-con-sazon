@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { ReactNode, useState, MouseEvent } from "react";
 
 interface TiltCardProps {
@@ -8,13 +8,17 @@ interface TiltCardProps {
 }
 
 // Inclina la tarjeta en 3D siguiendo la posición del mouse. Se desactiva en
-// touch (no hay hover real) para no dejar la tarjeta "trabada" en un ángulo.
+// touch (no hay hover real) para no dejar la tarjeta "trabada" en un ángulo,
+// y también cuando el usuario prefiere movimiento reducido (MotionConfig no
+// suprime esto automáticamente porque rotateX/rotateY se pasan a mano en `style`).
 export default function TiltCard({ children, className, maxTilt = 10 }: TiltCardProps) {
-  const [canTilt] = useState(
+  const [canHover] = useState(
     () =>
       typeof window !== "undefined" &&
       window.matchMedia("(hover: hover) and (pointer: fine)").matches
   );
+  const prefersReducedMotion = useReducedMotion();
+  const canTilt = canHover && !prefersReducedMotion;
 
   const x = useMotionValue(0.5);
   const y = useMotionValue(0.5);
