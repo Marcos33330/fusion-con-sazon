@@ -29,11 +29,11 @@ export default function Nosotros() {
   return (
     <PublicLayout>
       {/* Encabezado premium: fondo plano chocolate con acento mostaza */}
-      <section className="bg-brand-dark py-16 md:py-20 text-center px-4">
-        <h1 className="font-display text-4xl md:text-5xl font-extrabold uppercase tracking-tightest text-white">
+      <section className="bg-brand-dark py-24 md:py-32 text-center px-4">
+        <h1 className="font-display text-5xl md:text-7xl font-extrabold uppercase tracking-tightest text-white">
           Nosotros
         </h1>
-        <span className="inline-block mt-4 w-24 h-1 bg-brand-mustard rounded-full" />
+        <span className="inline-block mt-6 w-24 h-1 bg-brand-mustard rounded-full" />
       </section>
 
       {/* Cinta en loop infinito, como la de la referencia Banh Mi World */}
@@ -41,7 +41,7 @@ export default function Nosotros() {
 
       {/* La foto de la pareja como protagonista absoluta: grande, centrada, con
           manchas de color detrás que le dan profundidad y le hacen de marco */}
-      <section className="relative bg-brand-light py-16 md:py-24 px-4 text-center overflow-hidden">
+      <section className="relative bg-brand-light py-24 md:py-32 px-4 text-center overflow-hidden">
         <svg
           className="hidden md:block absolute top-10 right-10 w-16 h-16 text-brand/40 rotate-12 pointer-events-none"
           viewBox="0 0 64 64"
@@ -56,7 +56,7 @@ export default function Nosotros() {
         </svg>
 
         <p className="font-script text-6xl md:text-7xl text-brand leading-none mb-1 -rotate-2">¡Hola!</p>
-        <h2 className="font-display text-3xl md:text-5xl font-black uppercase tracking-tightest text-brand-dark mb-10">
+        <h2 className="font-display text-4xl md:text-6xl font-black uppercase tracking-tightest text-brand-dark mb-10">
           Somos{" "}
           <span className="font-script italic normal-case tracking-normal text-brand-mustard">
             Herminia y Oscar
@@ -85,7 +85,7 @@ export default function Nosotros() {
           >
             "
           </span>
-          <p className="relative text-xl md:text-2xl text-brand-dark/90 font-medium leading-relaxed whitespace-pre-line">
+          <p className="relative text-2xl md:text-3xl text-brand-dark/90 font-medium leading-relaxed whitespace-pre-line">
             {loading ? "Cargando..." : get("nosotros_page")}
           </p>
           <span className="block mx-auto mt-6 w-16 h-1 bg-brand-mustard rounded-full" />
@@ -101,7 +101,7 @@ export default function Nosotros() {
           <span className="pointer-events-none absolute inset-y-0 right-0 hidden w-24 bg-gradient-to-l from-brand-dark to-transparent md:block" />
         </div>
         <RevealOnScroll variant="fade-scale">
-          <GlassPanel className="relative flex h-full flex-col justify-center overflow-hidden !rounded-none !border-0 p-8 text-white sm:p-12 md:p-16">
+          <GlassPanel className="relative flex h-full flex-col justify-center overflow-hidden !rounded-none !border-0 p-10 text-white sm:p-14 md:p-20">
             <span
               aria-hidden="true"
               className="font-display pointer-events-none absolute right-6 top-2 text-[7rem] font-extrabold leading-none text-white/5 md:text-[10rem]"
@@ -111,7 +111,7 @@ export default function Nosotros() {
             <p className="font-script relative -rotate-2 text-4xl leading-none text-brand-mustard md:text-5xl">
               Dejarlo todo
             </p>
-            <h3 className="font-display relative mt-2 text-3xl font-extrabold uppercase leading-[0.95] tracking-tightest md:text-4xl lg:text-5xl">
+            <h3 className="font-display relative mt-2 text-4xl font-extrabold uppercase leading-[0.95] tracking-tightest md:text-5xl lg:text-6xl">
               para seguir nuestro sueño
             </h3>
             <span className="relative mt-5 block h-1 w-16 rounded-full bg-brand" />
@@ -127,7 +127,7 @@ export default function Nosotros() {
       <section className="grid md:grid-cols-2">
         <RevealOnScroll variant="fade-scale" className="order-2 md:order-1">
           <GlassPanel
-            className="relative flex h-full flex-col justify-center overflow-hidden !rounded-none !border-0 p-8 sm:p-12 md:p-16"
+            className="relative flex h-full flex-col justify-center overflow-hidden !rounded-none !border-0 p-10 sm:p-14 md:p-20"
             style={{ background: "linear-gradient(180deg,#FDF3E4 0%,#FAF8F5 100%)" }}
           >
             <span
@@ -137,7 +137,7 @@ export default function Nosotros() {
               02
             </span>
             <p className="font-script relative -rotate-2 text-4xl leading-none text-brand md:text-5xl">¿Por qué</p>
-            <h3 className="font-display relative mt-2 text-3xl font-extrabold uppercase leading-[0.95] tracking-tightest text-brand-dark md:text-4xl lg:text-5xl">
+            <h3 className="font-display relative mt-2 text-4xl font-extrabold uppercase leading-[0.95] tracking-tightest text-brand-dark md:text-5xl lg:text-6xl">
               Fusión con Sazón?
             </h3>
             <span className="relative mt-5 block h-1 w-16 rounded-full bg-brand-mustard" />
