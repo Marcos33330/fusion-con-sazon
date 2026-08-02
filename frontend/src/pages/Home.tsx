@@ -7,7 +7,6 @@ import PublicLayout from "../components/PublicLayout";
 import Marquee from "../components/Marquee";
 import ImageMarquee from "../components/ImageMarquee";
 import RevealOnScroll from "../components/ui/RevealOnScroll";
-import TiltCard from "../components/ui/TiltCard";
 import FloatingElement from "../components/ui/FloatingElement";
 import GlassPanel from "../components/ui/GlassPanel";
 
@@ -240,7 +239,7 @@ export default function Home() {
             </p>
           </RevealOnScroll>
           <RevealOnScroll delay={70}>
-            <h2 className="font-display mt-1 text-4xl font-extrabold uppercase tracking-tightest text-brand-dark md:text-5xl">
+            <h2 className="font-display mt-1 text-4xl italic text-brand-dark md:text-5xl">
               Experiencia
             </h2>
           </RevealOnScroll>
@@ -252,14 +251,10 @@ export default function Home() {
         <div className="grid gap-6 md:grid-cols-3">
           {foodCards.map((c, i) => (
             <RevealOnScroll key={c.to} delay={i * 110}>
-              <TiltCard
-                maxTilt={4}
-                className="group relative aspect-[4/5] overflow-hidden rounded-[1.75rem] bg-brand-dark shadow-warm transition-shadow duration-500 hover:shadow-warm-lg"
+              <Link
+                to={c.to}
+                className="group relative flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-[1.75rem] bg-brand-dark shadow-warm transition-shadow duration-500 hover:shadow-warm-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
               >
-                <Link
-                  to={c.to}
-                  className="absolute inset-0 flex flex-col justify-end focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
-                >
                   {c.img && (
                     <img
                       src={c.img}
@@ -289,8 +284,7 @@ export default function Home() {
                       <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
                     </span>
                   </div>
-                </Link>
-              </TiltCard>
+              </Link>
             </RevealOnScroll>
           ))}
         </div>
