@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../api/client";
 import { MediaItem, MediaPage } from "../types";
+import TiltCard from "./ui/TiltCard";
 
 interface Props {
   page: MediaPage;
@@ -55,26 +56,28 @@ export default function MediaGrid({ page, category }: Props) {
           key={item.id}
           className="group relative aspect-square overflow-hidden rounded-2xl bg-brand-gray shadow-warm transition-shadow duration-300 hover:shadow-warm-lg"
         >
-          {item.type === "IMAGE" ? (
-            <img
-              src={item.url}
-              alt={item.title ?? ""}
-              loading="lazy"
-              className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.04]"
-            />
-          ) : (
-            <video src={item.url} controls className="h-full w-full object-cover" preload="metadata" />
-          )}
+          <TiltCard maxTilt={5} className="h-full w-full">
+            {item.type === "IMAGE" ? (
+              <img
+                src={item.url}
+                alt={item.title ?? ""}
+                loading="lazy"
+                className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.04]"
+              />
+            ) : (
+              <video src={item.url} controls className="h-full w-full object-cover" preload="metadata" />
+            )}
 
-          {/* Acento de color fino, rotando por foto */}
-          <span
-            className="absolute inset-x-0 bottom-0 h-1.5"
-            style={{ backgroundColor: accents[i % accents.length] }}
-          />
+            {/* Acento de color fino, rotando por foto */}
+            <span
+              className="absolute inset-x-0 bottom-0 h-1.5"
+              style={{ backgroundColor: accents[i % accents.length] }}
+            />
+          </TiltCard>
 
           {/* Título como overlay al pasar el mouse, sin ocupar espacio fijo */}
           {item.title && (
-            <figcaption className="absolute inset-0 flex items-end bg-gradient-to-t from-brand-espresso/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <figcaption className="pointer-events-none absolute inset-0 flex items-end bg-gradient-to-t from-brand-espresso/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
               <p className="w-full p-4 text-sm font-semibold text-white">{item.title}</p>
             </figcaption>
           )}
