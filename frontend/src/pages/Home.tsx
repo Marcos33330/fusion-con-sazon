@@ -6,6 +6,10 @@ import { Testimonial, MediaItem, ContactInfo } from "../types";
 import PublicLayout from "../components/PublicLayout";
 import Marquee from "../components/Marquee";
 import ImageMarquee from "../components/ImageMarquee";
+import RevealOnScroll from "../components/ui/RevealOnScroll";
+import TiltCard from "../components/ui/TiltCard";
+import FloatingElement from "../components/ui/FloatingElement";
+import GlassPanel from "../components/ui/GlassPanel";
 
 /* Íconos inline: no sumamos dependencias nuevas al proyecto. */
 function IconWhatsApp({ className = "w-5 h-5" }: { className?: string }) {
@@ -67,7 +71,7 @@ function Headline({ text }: { text: string }) {
 }
 
 export default function Home() {
-  const { get, loading } = useContent();
+  const { get } = useContent();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [tortasPreview, setTortasPreview] = useState<MediaItem[]>([]);
   const [tortasHero, setTortasHero] = useState<MediaItem | null>(null);
@@ -99,32 +103,6 @@ export default function Home() {
       .then((items) => setNosotrosPhoto(items[0] ?? null))
       .catch(() => {});
   }, []);
-
-  /* Animación de entrada: revelamos cada bloque cuando entra en pantalla.
-     Se vuelve a ejecutar cuando llegan los datos, porque recién ahí existen
-     las tarjetas de testimonios y de categorías en el DOM. */
-  useEffect(() => {
-    const els = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
-    if (typeof IntersectionObserver === "undefined") {
-      els.forEach((el) => el.classList.add("is-visible"));
-      return;
-    }
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            io.unobserve(entry.target);
-          }
-        });
-      },
-      { rootMargin: "0px 0px -8% 0px", threshold: 0.06 }
-    );
-    els.forEach((el) => {
-      if (!el.classList.contains("is-visible")) io.observe(el);
-    });
-    return () => io.disconnect();
-  }, [loading, testimonials.length, tortasPreview.length, nosotrosPhoto, cateringHero, eventosHero]);
 
   const waHref = contact
     ? `https://wa.me/${contact.whatsapp.replace(/[^\d]/g, "")}?text=${encodeURIComponent(
@@ -235,76 +213,67 @@ export default function Home() {
         <div className="relative mx-auto grid max-w-6xl items-center gap-14 px-4 py-20 md:py-28 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
           {/* --- Columna de texto --- */}
           <div className="text-center lg:text-left">
-            <span
-              data-reveal
-              className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.22em] text-white/70 backdrop-blur-sm"
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-brand-mustard" />
-              Montevideo · La Unión
-            </span>
+            <RevealOnScroll>
+              <span className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.22em] text-white/70 backdrop-blur-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-brand-mustard" />
+                Montevideo · La Unión
+              </span>
+            </RevealOnScroll>
 
-            <h1
-              data-reveal
-              style={{ transitionDelay: "80ms" }}
-              className="font-display mt-7 text-[clamp(2.5rem,6.4vw,4.75rem)] font-extrabold uppercase leading-[0.92] tracking-tightest"
-            >
-              <Headline text={heroText} />
-            </h1>
+            <RevealOnScroll delay={80}>
+              <h1 className="font-display mt-7 text-[clamp(2.5rem,6.4vw,4.75rem)] font-extrabold uppercase leading-[0.92] tracking-tightest">
+                <Headline text={heroText} />
+              </h1>
+            </RevealOnScroll>
 
-            <p
-              data-reveal
-              style={{ transitionDelay: "160ms" }}
-              className="mx-auto mt-7 max-w-md text-lg leading-relaxed text-white/70 lg:mx-0"
-            >
-              {get(
-                "home_hero_sub",
-                "Catering, tortas y postres artesanales hechos por una pareja que cocina desde hace más de 20 años. Sabor de hogar, para tu mesa."
-              )}
-            </p>
+            <RevealOnScroll delay={160}>
+              <p className="mx-auto mt-7 max-w-md text-lg leading-relaxed text-white/70 lg:mx-0">
+                {get(
+                  "home_hero_sub",
+                  "Catering, tortas y postres artesanales hechos por una pareja que cocina desde hace más de 20 años. Sabor de hogar, para tu mesa."
+                )}
+              </p>
+            </RevealOnScroll>
 
-            <div
-              data-reveal
-              style={{ transitionDelay: "240ms" }}
-              className="mt-10 flex flex-col gap-3.5 sm:flex-row sm:justify-center lg:justify-start"
-            >
-              <a
-                href={waHref}
-                target="_blank"
-                rel="noreferrer"
-                className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-brand px-8 py-4 text-sm font-extrabold uppercase tracking-wide text-white shadow-warm transition hover:bg-brand-mustard hover:text-brand-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-mustard"
-              >
-                <IconWhatsApp className="h-5 w-5" />
-                Solicitar presupuesto
-              </a>
-              <Link
-                to="/catering"
-                className="group inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/25 px-8 py-4 text-sm font-extrabold uppercase tracking-wide text-white transition hover:border-white hover:bg-white hover:text-brand-dark"
-              >
-                Ver el menú
-                <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-              </Link>
-            </div>
+            <RevealOnScroll delay={240}>
+              <div className="mt-10 flex flex-col gap-3.5 sm:flex-row sm:justify-center lg:justify-start">
+                <a
+                  href={waHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-brand px-8 py-4 text-sm font-extrabold uppercase tracking-wide text-white shadow-warm transition hover:bg-brand-mustard hover:text-brand-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-mustard"
+                >
+                  <IconWhatsApp className="h-5 w-5" />
+                  Solicitar presupuesto
+                </a>
+                <Link
+                  to="/catering"
+                  className="group inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/25 px-8 py-4 text-sm font-extrabold uppercase tracking-wide text-white transition hover:border-white hover:bg-white hover:text-brand-dark"
+                >
+                  Ver el menú
+                  <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </Link>
+              </div>
+            </RevealOnScroll>
 
             {/* Datos duros: dan credibilidad justo debajo del CTA. */}
-            <dl
-              data-reveal
-              style={{ transitionDelay: "320ms" }}
-              className="mt-12 flex flex-wrap justify-center gap-x-8 gap-y-5 border-t border-white/10 pt-8 lg:justify-start"
-            >
-              {stats.map((s) => (
-                <div key={s.label} className="text-center lg:text-left">
-                  <dt className="font-display text-3xl font-extrabold text-brand-mustard">{s.value}</dt>
-                  <dd className="mt-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/50">
-                    {s.label}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            <RevealOnScroll delay={320}>
+              <dl className="mt-12 flex flex-wrap justify-center gap-x-8 gap-y-5 border-t border-white/10 pt-8 lg:justify-start">
+                {stats.map((s) => (
+                  <div key={s.label} className="text-center lg:text-left">
+                    <dt className="font-display text-3xl font-extrabold text-brand-mustard">{s.value}</dt>
+                    <dd className="mt-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/50">
+                      {s.label}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </RevealOnScroll>
           </div>
 
           {/* --- Collage de fotos --- */}
-          <div data-reveal style={{ transitionDelay: "200ms" }} className="relative mx-auto w-full max-w-md lg:max-w-none">
-            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[2.25rem] bg-white/5 shadow-warm-lg ring-1 ring-white/10">
+          <RevealOnScroll delay={200} className="relative mx-auto w-full max-w-md lg:max-w-none">
+            <TiltCard maxTilt={6} className="relative aspect-[4/5] w-full overflow-hidden rounded-[2.25rem] bg-white/5 shadow-warm-lg ring-1 ring-white/10">
               {tortasHero?.url && (
                 <img
                   src={tortasHero.url}
@@ -313,25 +282,29 @@ export default function Home() {
                 />
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/55 via-transparent to-transparent" />
-            </div>
+            </TiltCard>
 
             {/* Foto secundaria flotante */}
             {heroSecondary && (
-              <div className="animate-float absolute -bottom-8 -left-6 hidden h-40 w-40 overflow-hidden rounded-3xl shadow-warm-lg ring-4 ring-brand-dark sm:block">
-                <img src={heroSecondary} alt="Catering de Fusión con Sazón" className="h-full w-full object-cover" />
-              </div>
+              <FloatingElement className="absolute -bottom-8 -left-6 hidden sm:block">
+                <TiltCard maxTilt={8} className="h-40 w-40 overflow-hidden rounded-3xl shadow-warm-lg ring-4 ring-brand-dark">
+                  <img src={heroSecondary} alt="Catering de Fusión con Sazón" className="h-full w-full object-cover" />
+                </TiltCard>
+              </FloatingElement>
             )}
 
             {/* Sello giratorio */}
-            <SpinningBadge className="animate-float-delayed absolute -right-3 -top-7 h-24 w-24 md:h-28 md:w-28" />
+            <FloatingElement delay={1.2} className="absolute -right-3 -top-7 h-24 w-24 md:h-28 md:w-28">
+              <SpinningBadge className="h-full w-full" />
+            </FloatingElement>
 
             {/* Chip de reseñas */}
-            <div className="absolute -bottom-5 right-4 flex items-center gap-2 rounded-full bg-white px-4 py-2.5 shadow-warm-lg">
+            <GlassPanel className="absolute -bottom-5 right-4 flex items-center gap-2 !bg-white px-4 py-2.5 !border-transparent">
               <IconGoogle className="h-4 w-4 shrink-0" />
               <span className="text-sm font-extrabold text-brand-dark">5.0</span>
               <span className="text-xs tracking-tighter text-brand-mustard">★★★★★</span>
-            </div>
-          </div>
+            </GlassPanel>
+          </RevealOnScroll>
         </div>
 
         <div className="deco-divider" style={{ ["--deco-color" as string]: "#FFA610" }} />
@@ -345,58 +318,61 @@ export default function Home() {
       ================================================================= */}
       <section className="mx-auto max-w-6xl px-4 py-20 md:py-28">
         <div className="mb-12 max-w-2xl">
-          <p data-reveal className="font-script -rotate-2 text-4xl leading-none text-brand md:text-5xl">
-            Elegí tu
-          </p>
-          <h2
-            data-reveal
-            style={{ transitionDelay: "70ms" }}
-            className="font-display mt-1 text-4xl font-extrabold uppercase tracking-tightest text-brand-dark md:text-5xl"
-          >
-            Experiencia
-          </h2>
-          <span data-reveal style={{ transitionDelay: "110ms" }} className="mt-5 block h-1 w-16 rounded-full bg-brand-mustard" />
+          <RevealOnScroll>
+            <p className="font-script -rotate-2 text-4xl leading-none text-brand md:text-5xl">
+              Elegí tu
+            </p>
+          </RevealOnScroll>
+          <RevealOnScroll delay={70}>
+            <h2 className="font-display mt-1 text-4xl font-extrabold uppercase tracking-tightest text-brand-dark md:text-5xl">
+              Experiencia
+            </h2>
+          </RevealOnScroll>
+          <RevealOnScroll delay={110}>
+            <span className="mt-5 block h-1 w-16 rounded-full bg-brand-mustard" />
+          </RevealOnScroll>
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
           {foodCards.map((c, i) => (
-            <Link
-              key={c.to}
-              to={c.to}
-              data-reveal
-              style={{ transitionDelay: `${i * 110}ms` }}
-              className="group relative flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-[1.75rem] bg-brand-dark shadow-warm transition-shadow duration-500 hover:shadow-warm-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
-            >
-              {c.img && (
-                <img
-                  src={c.img}
-                  alt={c.label}
-                  loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-110"
-                />
-              )}
-              {/* Gradiente de protección: garantiza legibilidad sobre cualquier foto. */}
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-espresso via-brand-espresso/55 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-95" />
-
-              <span
-                className="absolute left-6 top-6 font-display text-5xl font-extrabold leading-none opacity-70 transition-opacity duration-500 group-hover:opacity-100"
-                style={{ color: c.accent }}
+            <RevealOnScroll key={c.to} delay={i * 110}>
+              <Link
+                to={c.to}
+                className="group relative flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-[1.75rem] bg-brand-dark shadow-warm transition-shadow duration-500 hover:shadow-warm-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
               >
-                0{i + 1}
-              </span>
+                <TiltCard maxTilt={4} className="absolute inset-0">
+                  {c.img && (
+                    <img
+                      src={c.img}
+                      alt={c.label}
+                      loading="lazy"
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-110"
+                    />
+                  )}
+                  {/* Gradiente de protección: garantiza legibilidad sobre cualquier foto. */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-espresso via-brand-espresso/55 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-95" />
+                </TiltCard>
 
-              <div className="relative p-6 md:p-7">
-                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-mustard">{c.tag}</span>
-                <h3 className="font-display mt-2 text-2xl font-extrabold uppercase leading-tight tracking-tight text-white md:text-[1.7rem]">
-                  {c.label}
-                </h3>
-                <p className="mt-2.5 text-sm leading-relaxed text-white/70">{c.copy}</p>
-                <span className="mt-4 inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-white">
-                  Ver más
-                  <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
+                <span
+                  className="absolute left-6 top-6 font-display text-5xl font-extrabold leading-none opacity-70 transition-opacity duration-500 group-hover:opacity-100"
+                  style={{ color: c.accent }}
+                >
+                  0{i + 1}
                 </span>
-              </div>
-            </Link>
+
+                <div className="relative p-6 md:p-7">
+                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-mustard">{c.tag}</span>
+                  <h3 className="font-display mt-2 text-2xl font-extrabold uppercase leading-tight tracking-tight text-white md:text-[1.7rem]">
+                    {c.label}
+                  </h3>
+                  <p className="mt-2.5 text-sm leading-relaxed text-white/70">{c.copy}</p>
+                  <span className="mt-4 inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-white">
+                    Ver más
+                    <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
+                  </span>
+                </div>
+              </Link>
+            </RevealOnScroll>
           ))}
         </div>
       </section>
@@ -412,7 +388,7 @@ export default function Home() {
         />
 
         <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 md:py-24 lg:grid-cols-2 lg:gap-16">
-          <div data-reveal className="relative mx-auto w-full max-w-sm lg:mx-0">
+          <RevealOnScroll className="relative mx-auto w-full max-w-sm lg:mx-0">
             {/* Resplandor cálido detrás del recorte. Va sin tarjeta a propósito:
                 encajonar un PNG transparente en un rectángulo blanco anula el
                 recorte y se ve igual que la foto original. */}
@@ -427,36 +403,31 @@ export default function Home() {
                 className="relative mx-auto h-[420px] w-auto object-contain object-bottom drop-shadow-2xl md:h-[540px]"
               />
             )}
-          </div>
+          </RevealOnScroll>
 
           <div className="text-center lg:text-left">
-            <h2
-              data-reveal
-              className="font-display text-5xl font-extrabold uppercase leading-[0.9] tracking-tightest text-brand-dark md:text-6xl lg:text-7xl"
-            >
-              Nosotros
-            </h2>
-            <span
-              data-reveal
-              style={{ transitionDelay: "80ms" }}
-              className="mx-auto mt-6 block h-1.5 w-20 rounded-full bg-brand lg:mx-0"
-            />
-            <p
-              data-reveal
-              style={{ transitionDelay: "140ms" }}
-              className="mt-7 text-lg leading-relaxed text-brand-dark/70"
-            >
-              {get("home_nosotros_preview")}
-            </p>
-            <Link
-              data-reveal
-              style={{ transitionDelay: "200ms" }}
-              to="/nosotros"
-              className="group mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-brand px-7 py-3.5 text-sm font-extrabold uppercase tracking-wide text-white transition hover:bg-brand-dark"
-            >
-              Leer nuestra historia
-              <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-            </Link>
+            <RevealOnScroll>
+              <h2 className="font-display text-5xl font-extrabold uppercase leading-[0.9] tracking-tightest text-brand-dark md:text-6xl lg:text-7xl">
+                Nosotros
+              </h2>
+            </RevealOnScroll>
+            <RevealOnScroll delay={80}>
+              <span className="mx-auto mt-6 block h-1.5 w-20 rounded-full bg-brand lg:mx-0" />
+            </RevealOnScroll>
+            <RevealOnScroll delay={140}>
+              <p className="mt-7 text-lg leading-relaxed text-brand-dark/70">
+                {get("home_nosotros_preview")}
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll delay={200}>
+              <Link
+                to="/nosotros"
+                className="group mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-brand px-7 py-3.5 text-sm font-extrabold uppercase tracking-wide text-white transition hover:bg-brand-dark"
+              >
+                Leer nuestra historia
+                <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+              </Link>
+            </RevealOnScroll>
           </div>
         </div>
       </section>
@@ -470,38 +441,37 @@ export default function Home() {
       ================================================================= */}
       <section className="mx-auto max-w-6xl px-4 py-20 md:py-24">
         <div className="mb-12 max-w-2xl">
-          <p data-reveal className="font-script -rotate-2 text-4xl leading-none text-brand md:text-5xl">
-            Así de simple
-          </p>
-          <h2
-            data-reveal
-            style={{ transitionDelay: "70ms" }}
-            className="font-display mt-1 text-4xl font-extrabold uppercase tracking-tightest text-brand-dark md:text-5xl"
-          >
-            Cómo trabajamos
-          </h2>
-          <span data-reveal style={{ transitionDelay: "110ms" }} className="mt-5 block h-1 w-16 rounded-full bg-brand-mustard" />
+          <RevealOnScroll>
+            <p className="font-script -rotate-2 text-4xl leading-none text-brand md:text-5xl">
+              Así de simple
+            </p>
+          </RevealOnScroll>
+          <RevealOnScroll delay={70}>
+            <h2 className="font-display mt-1 text-4xl font-extrabold uppercase tracking-tightest text-brand-dark md:text-5xl">
+              Cómo trabajamos
+            </h2>
+          </RevealOnScroll>
+          <RevealOnScroll delay={110}>
+            <span className="mt-5 block h-1 w-16 rounded-full bg-brand-mustard" />
+          </RevealOnScroll>
         </div>
 
         <ol className="grid gap-6 md:grid-cols-3">
           {steps.map((s, i) => (
-            <li
-              key={s.title}
-              data-reveal
-              style={{ transitionDelay: `${i * 110}ms` }}
-              className="group relative overflow-hidden rounded-[1.5rem] border border-brand-dark/10 bg-white p-8 transition-transform duration-500 hover:-translate-y-1.5"
-            >
-              <span className="font-display absolute -right-2 -top-4 text-[7rem] font-extrabold leading-none text-brand-dark/5 transition-colors duration-500 group-hover:text-brand/10">
-                {i + 1}
-              </span>
-              <span className="relative flex h-11 w-11 items-center justify-center rounded-full bg-brand-mustard font-display text-lg font-extrabold text-brand-dark">
-                {i + 1}
-              </span>
-              <h3 className="font-display relative mt-5 text-xl font-extrabold uppercase tracking-tight text-brand-dark">
-                {s.title}
-              </h3>
-              <p className="relative mt-3 leading-relaxed text-brand-dark/70">{s.body}</p>
-            </li>
+            <RevealOnScroll key={s.title} delay={i * 110}>
+              <li className="group relative overflow-hidden rounded-[1.5rem] border border-brand-dark/10 bg-white p-8 transition-transform duration-500 hover:-translate-y-1.5">
+                <span className="font-display absolute -right-2 -top-4 text-[7rem] font-extrabold leading-none text-brand-dark/5 transition-colors duration-500 group-hover:text-brand/10">
+                  {i + 1}
+                </span>
+                <span className="relative flex h-11 w-11 items-center justify-center rounded-full bg-brand-mustard font-display text-lg font-extrabold text-brand-dark">
+                  {i + 1}
+                </span>
+                <h3 className="font-display relative mt-5 text-xl font-extrabold uppercase tracking-tight text-brand-dark">
+                  {s.title}
+                </h3>
+                <p className="relative mt-3 leading-relaxed text-brand-dark/70">{s.body}</p>
+              </li>
+            </RevealOnScroll>
           ))}
         </ol>
       </section>
@@ -512,53 +482,48 @@ export default function Home() {
       <section id="testimonios" className="bg-brand-gray px-4 py-20 md:py-24">
         <div className="mx-auto max-w-5xl">
           <div className="mb-12 text-center">
-            <p data-reveal className="font-script -rotate-2 text-4xl leading-none text-brand md:text-5xl">
-              Lo que dicen
-            </p>
-            <h2
-              data-reveal
-              style={{ transitionDelay: "70ms" }}
-              className="font-display mt-1 text-4xl font-extrabold uppercase tracking-tightest text-brand-dark md:text-5xl"
-            >
-              de nosotros
-            </h2>
-            <div
-              data-reveal
-              style={{ transitionDelay: "130ms" }}
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 shadow-warm"
-            >
-              <IconGoogle className="h-5 w-5 shrink-0" />
-              <span className="font-extrabold text-brand-dark">5.0</span>
-              <span className="text-sm tracking-tighter text-brand-mustard">★★★★★</span>
-              <span className="text-sm text-brand-dark/50">· 52 reseñas de Google</span>
-            </div>
+            <RevealOnScroll>
+              <p className="font-script -rotate-2 text-4xl leading-none text-brand md:text-5xl">
+                Lo que dicen
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll delay={70}>
+              <h2 className="font-display mt-1 text-4xl font-extrabold uppercase tracking-tightest text-brand-dark md:text-5xl">
+                de nosotros
+              </h2>
+            </RevealOnScroll>
+            <RevealOnScroll delay={130}>
+              <GlassPanel className="mt-6 inline-flex items-center gap-2 !bg-white px-5 py-2.5 !border-transparent">
+                <IconGoogle className="h-5 w-5 shrink-0" />
+                <span className="font-extrabold text-brand-dark">5.0</span>
+                <span className="text-sm tracking-tighter text-brand-mustard">★★★★★</span>
+                <span className="text-sm text-brand-dark/50">· 52 reseñas de Google</span>
+              </GlassPanel>
+            </RevealOnScroll>
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
             {testimonials.map((t, i) => {
               const [name, source] = t.author.split(" · ");
               return (
-                <blockquote
-                  key={t.id}
-                  data-reveal
-                  style={{ transitionDelay: `${i * 110}ms` }}
-                  className="relative rounded-[1.5rem] bg-white p-7 pt-10 shadow-warm transition-transform duration-500 hover:-translate-y-1.5"
-                >
-                  <span className="font-display absolute -top-5 left-7 flex h-11 w-11 items-center justify-center rounded-full bg-brand-mustard text-2xl font-black leading-none text-white shadow-warm">
-                    &ldquo;
-                  </span>
-                  <div className="mb-3 text-sm tracking-tighter text-brand-mustard">★★★★★</div>
-                  <p className="leading-relaxed text-brand-dark/75">{t.text}</p>
-                  <footer className="mt-5 flex items-center gap-2">
-                    <span className="font-bold text-brand-dark">{name}</span>
-                    {source && (
-                      <span className="inline-flex items-center gap-1 text-xs text-brand-dark/40">
-                        <IconGoogle className="h-3.5 w-3.5 shrink-0" />
-                        {source}
-                      </span>
-                    )}
-                  </footer>
-                </blockquote>
+                <RevealOnScroll key={t.id} delay={i * 110}>
+                  <blockquote className="relative rounded-[1.5rem] bg-white p-7 pt-10 shadow-warm transition-transform duration-500 hover:-translate-y-1.5">
+                    <span className="font-display absolute -top-5 left-7 flex h-11 w-11 items-center justify-center rounded-full bg-brand-mustard text-2xl font-black leading-none text-white shadow-warm">
+                      &ldquo;
+                    </span>
+                    <div className="mb-3 text-sm tracking-tighter text-brand-mustard">★★★★★</div>
+                    <p className="leading-relaxed text-brand-dark/75">{t.text}</p>
+                    <footer className="mt-5 flex items-center gap-2">
+                      <span className="font-bold text-brand-dark">{name}</span>
+                      {source && (
+                        <span className="inline-flex items-center gap-1 text-xs text-brand-dark/40">
+                          <IconGoogle className="h-3.5 w-3.5 shrink-0" />
+                          {source}
+                        </span>
+                      )}
+                    </footer>
+                  </blockquote>
+                </RevealOnScroll>
               );
             })}
           </div>
@@ -587,42 +552,44 @@ export default function Home() {
           style={{ background: "radial-gradient(circle, rgba(255,166,16,0.7) 0%, transparent 65%)" }}
         />
         <div className="relative mx-auto flex max-w-4xl flex-col items-center px-4 py-20 text-center md:py-24">
-          <p data-reveal className="font-script -rotate-2 text-4xl leading-none text-white/90 md:text-5xl">
-            ¿Armamos algo rico?
-          </p>
-          <h2
-            data-reveal
-            style={{ transitionDelay: "70ms" }}
-            className="font-display mt-2 max-w-2xl text-4xl font-extrabold uppercase leading-[0.95] tracking-tightest text-white md:text-6xl"
-          >
-            Contanos tu evento
-          </h2>
-          <p data-reveal style={{ transitionDelay: "130ms" }} className="mt-6 max-w-lg text-lg text-white/80">
-            {get(
-              "home_cta_final",
-              "Escribinos por WhatsApp y te armamos una propuesta a medida, sin compromiso."
-            )}
-          </p>
-          <a
-            data-reveal
-            style={{ transitionDelay: "190ms" }}
-            href={waHref}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-9 inline-flex items-center gap-2.5 rounded-full bg-white px-9 py-4 text-sm font-extrabold uppercase tracking-wide text-brand-dark shadow-warm-lg transition hover:bg-brand-dark hover:text-white"
-          >
-            <IconWhatsApp className="h-5 w-5" />
-            Escribinos por WhatsApp
-          </a>
-          {contact?.phone && (
+          <RevealOnScroll>
+            <p className="font-script -rotate-2 text-4xl leading-none text-white/90 md:text-5xl">
+              ¿Armamos algo rico?
+            </p>
+          </RevealOnScroll>
+          <RevealOnScroll delay={70}>
+            <h2 className="font-display mt-2 max-w-2xl text-4xl font-extrabold uppercase leading-[0.95] tracking-tightest text-white md:text-6xl">
+              Contanos tu evento
+            </h2>
+          </RevealOnScroll>
+          <RevealOnScroll delay={130}>
+            <p className="mt-6 max-w-lg text-lg text-white/80">
+              {get(
+                "home_cta_final",
+                "Escribinos por WhatsApp y te armamos una propuesta a medida, sin compromiso."
+              )}
+            </p>
+          </RevealOnScroll>
+          <RevealOnScroll delay={190}>
             <a
-              data-reveal
-              style={{ transitionDelay: "240ms" }}
-              href={`tel:${contact.phone.replace(/\s/g, "")}`}
-              className="mt-5 text-sm font-semibold text-white/70 transition hover:text-white"
+              href={waHref}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-9 inline-flex items-center gap-2.5 rounded-full bg-white px-9 py-4 text-sm font-extrabold uppercase tracking-wide text-brand-dark shadow-warm-lg transition hover:bg-brand-dark hover:text-white"
             >
-              o llamanos al {contact.phone}
+              <IconWhatsApp className="h-5 w-5" />
+              Escribinos por WhatsApp
             </a>
+          </RevealOnScroll>
+          {contact?.phone && (
+            <RevealOnScroll delay={240}>
+              <a
+                href={`tel:${contact.phone.replace(/\s/g, "")}`}
+                className="mt-5 text-sm font-semibold text-white/70 transition hover:text-white"
+              >
+                o llamanos al {contact.phone}
+              </a>
+            </RevealOnScroll>
           )}
         </div>
       </section>
