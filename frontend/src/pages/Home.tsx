@@ -411,7 +411,7 @@ export default function Home() {
           style={{ background: "radial-gradient(circle, rgba(255,166,16,0.32) 0%, transparent 65%)" }}
         />
 
-        <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 md:py-24 lg:grid-cols-2 lg:gap-16">
+        <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-28 md:py-36 lg:grid-cols-2 lg:gap-16">
           <RevealOnScroll className="relative mx-auto w-full max-w-sm lg:mx-0">
             {/* Resplandor cálido detrás del recorte. Va sin tarjeta a propósito:
                 encajonar un PNG transparente en un rectángulo blanco anula el
@@ -500,16 +500,16 @@ export default function Home() {
       {/* ================================================================
           TESTIMONIOS
       ================================================================= */}
-      <section id="testimonios" className="bg-brand-gray px-4 py-20 md:py-24">
+      <section id="testimonios" className="bg-brand-gray px-4 py-28 md:py-36">
         <div className="mx-auto max-w-5xl">
-          <div className="mb-12 text-center">
+          <div className="mb-16 text-center">
             <RevealOnScroll>
               <p className="font-script -rotate-2 text-4xl leading-none text-brand md:text-5xl">
                 Lo que dicen
               </p>
             </RevealOnScroll>
             <RevealOnScroll delay={70}>
-              <h2 className="font-display mt-1 text-4xl font-extrabold uppercase tracking-tightest text-brand-dark md:text-5xl">
+              <h2 className="font-display mt-2 text-5xl font-extrabold uppercase tracking-tightest text-brand-dark md:text-7xl">
                 de nosotros
               </h2>
             </RevealOnScroll>
@@ -523,7 +523,7 @@ export default function Home() {
             </RevealOnScroll>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-2">
             {testimonials.map((t, i) => {
               const [name, source] = t.author.split(" · ");
               return (
@@ -572,14 +572,14 @@ export default function Home() {
           className="pointer-events-none absolute -top-32 right-0 h-[26rem] w-[26rem] rounded-full opacity-40 blur-3xl"
           style={{ background: "radial-gradient(circle, rgba(255,166,16,0.7) 0%, transparent 65%)" }}
         />
-        <div className="relative mx-auto flex max-w-4xl flex-col items-center px-4 py-20 text-center md:py-24">
+        <div className="relative mx-auto flex max-w-4xl flex-col items-center px-4 py-28 text-center md:py-36">
           <RevealOnScroll>
             <p className="font-script -rotate-2 text-4xl leading-none text-white/90 md:text-5xl">
               ¿Armamos algo rico?
             </p>
           </RevealOnScroll>
           <RevealOnScroll delay={70}>
-            <h2 className="font-display mt-2 max-w-2xl text-4xl font-extrabold uppercase leading-[0.95] tracking-tightest text-white md:text-6xl">
+            <h2 className="font-display mt-2 max-w-2xl text-5xl font-extrabold uppercase leading-[0.95] tracking-tightest text-white md:text-7xl">
               Contanos tu evento
             </h2>
           </RevealOnScroll>
