@@ -125,9 +125,9 @@ export default function Nosotros() {
       {/* Tarjeta 2: alterna lado y color. El panel claro corta la monotonía
           del chocolate y le devuelve aire a la página. */}
       <section className="grid md:grid-cols-2">
-        <RevealOnScroll variant="fade-scale">
+        <RevealOnScroll variant="fade-scale" className="order-2 md:order-1">
           <GlassPanel
-            className="relative order-2 flex h-full flex-col justify-center overflow-hidden !rounded-none !border-0 p-8 sm:p-12 md:order-1 md:p-16"
+            className="relative flex h-full flex-col justify-center overflow-hidden !rounded-none !border-0 p-8 sm:p-12 md:p-16"
             style={{ background: "linear-gradient(180deg,#FDF3E4 0%,#FAF8F5 100%)" }}
           >
             <span
