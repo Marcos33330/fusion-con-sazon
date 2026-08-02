@@ -20,8 +20,8 @@ export default {
       fontFamily: {
         // Body: geométrica cálida y muy legible. Reemplaza a system-ui.
         sans: ["Manrope", "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
-        // Display: grotesca con carácter para títulos grandes en mayúsculas.
-        display: ['"Bricolage Grotesque"', "Manrope", "system-ui", "sans-serif"],
+        // Display: serif editorial (referencia vineyard.co.za) para títulos grandes.
+        display: ['"Playfair Display"', "Georgia", "serif"],
       },
       letterSpacing: {
         tightest: "-0.045em",

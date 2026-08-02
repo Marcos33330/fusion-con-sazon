@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700;800&family=Caveat:wght@600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -22,10 +22,10 @@ body {
   font-family: "Caveat", cursive;
 }
 
-/* Títulos grandes: grotesca con carácter, apretada y en mayúsculas. */
+/* Títulos grandes: serif editorial, en vez de la grotesca en mayúsculas del
+   diseño anterior — referencia: vineyard.co.za. */
 .font-display {
-  font-family: "Bricolage Grotesque", "Manrope", system-ui, sans-serif;
-  font-optical-sizing: auto;
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
 }
 
 /* Los títulos nunca deben cortar una palabra sola en la última línea. */
@@ -107,4 +107,11 @@ li {
     transparent 10px,
     transparent 20px
   );
+}
+
+/* Recorte en arco/domo para una foto clave, motivo visual tomado de
+   vineyard.co.za. border-radius asimétrico: esquinas superiores muy
+   redondeadas, inferiores rectas. */
+.arch-mask {
+  border-radius: 999px 999px 0 0;
 }
