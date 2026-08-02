@@ -4,6 +4,8 @@ import { api } from "../api/client";
 import { MediaItem } from "../types";
 import PublicLayout from "../components/PublicLayout";
 import Marquee from "../components/Marquee";
+import RevealOnScroll from "../components/ui/RevealOnScroll";
+import GlassPanel from "../components/ui/GlassPanel";
 
 export default function Nosotros() {
   const { get, loading } = useContent();
@@ -92,54 +94,58 @@ export default function Nosotros() {
 
       {/* Historia completa: dos tarjetas foto + texto a todo el ancho.
           Tarjeta 1: foto a la izquierda, panel chocolate a la derecha. */}
-      <section className="grid md:grid-cols-2">
+      <section className="grid bg-brand-dark md:grid-cols-2">
         <div className="relative h-72 overflow-hidden md:h-auto md:min-h-[600px]">
           {dreamImg && <img src={dreamImg.url} alt="" className="h-full w-full object-cover" />}
           {/* Degradé en la costura para que la foto no choque contra el panel. */}
           <span className="pointer-events-none absolute inset-y-0 right-0 hidden w-24 bg-gradient-to-l from-brand-dark to-transparent md:block" />
         </div>
-        <div className="relative flex flex-col justify-center overflow-hidden bg-brand-dark p-8 text-white sm:p-12 md:p-16">
-          <span
-            aria-hidden="true"
-            className="font-display pointer-events-none absolute right-6 top-2 text-[7rem] font-extrabold leading-none text-white/5 md:text-[10rem]"
-          >
-            01
-          </span>
-          <p className="font-script relative -rotate-2 text-4xl leading-none text-brand-mustard md:text-5xl">
-            Dejarlo todo
-          </p>
-          <h3 className="font-display relative mt-2 text-3xl font-extrabold uppercase leading-[0.95] tracking-tightest md:text-4xl lg:text-5xl">
-            para seguir nuestro sueño
-          </h3>
-          <span className="relative mt-5 block h-1 w-16 rounded-full bg-brand" />
-          <p className="relative mt-6 max-w-prose whitespace-pre-line leading-relaxed text-white/75">
-            {get("nosotros_dream")}
-          </p>
-        </div>
+        <RevealOnScroll variant="fade-scale">
+          <GlassPanel className="relative flex h-full flex-col justify-center overflow-hidden !rounded-none !border-0 p-8 text-white sm:p-12 md:p-16">
+            <span
+              aria-hidden="true"
+              className="font-display pointer-events-none absolute right-6 top-2 text-[7rem] font-extrabold leading-none text-white/5 md:text-[10rem]"
+            >
+              01
+            </span>
+            <p className="font-script relative -rotate-2 text-4xl leading-none text-brand-mustard md:text-5xl">
+              Dejarlo todo
+            </p>
+            <h3 className="font-display relative mt-2 text-3xl font-extrabold uppercase leading-[0.95] tracking-tightest md:text-4xl lg:text-5xl">
+              para seguir nuestro sueño
+            </h3>
+            <span className="relative mt-5 block h-1 w-16 rounded-full bg-brand" />
+            <p className="relative mt-6 max-w-prose whitespace-pre-line leading-relaxed text-white/75">
+              {get("nosotros_dream")}
+            </p>
+          </GlassPanel>
+        </RevealOnScroll>
       </section>
 
       {/* Tarjeta 2: alterna lado y color. El panel claro corta la monotonía
           del chocolate y le devuelve aire a la página. */}
       <section className="grid md:grid-cols-2">
-        <div
-          className="relative order-2 flex flex-col justify-center overflow-hidden p-8 sm:p-12 md:order-1 md:p-16"
-          style={{ background: "linear-gradient(180deg,#FDF3E4 0%,#FAF8F5 100%)" }}
-        >
-          <span
-            aria-hidden="true"
-            className="font-display pointer-events-none absolute right-6 top-2 text-[7rem] font-extrabold leading-none text-brand-dark/5 md:text-[10rem]"
+        <RevealOnScroll variant="fade-scale">
+          <GlassPanel
+            className="relative order-2 flex h-full flex-col justify-center overflow-hidden !rounded-none !border-0 p-8 sm:p-12 md:order-1 md:p-16"
+            style={{ background: "linear-gradient(180deg,#FDF3E4 0%,#FAF8F5 100%)" }}
           >
-            02
-          </span>
-          <p className="font-script relative -rotate-2 text-4xl leading-none text-brand md:text-5xl">¿Por qué</p>
-          <h3 className="font-display relative mt-2 text-3xl font-extrabold uppercase leading-[0.95] tracking-tightest text-brand-dark md:text-4xl lg:text-5xl">
-            Fusión con Sazón?
-          </h3>
-          <span className="relative mt-5 block h-1 w-16 rounded-full bg-brand-mustard" />
-          <p className="relative mt-6 max-w-prose whitespace-pre-line leading-relaxed text-brand-dark/70">
-            {get("nosotros_why")}
-          </p>
-        </div>
+            <span
+              aria-hidden="true"
+              className="font-display pointer-events-none absolute right-6 top-2 text-[7rem] font-extrabold leading-none text-brand-dark/5 md:text-[10rem]"
+            >
+              02
+            </span>
+            <p className="font-script relative -rotate-2 text-4xl leading-none text-brand md:text-5xl">¿Por qué</p>
+            <h3 className="font-display relative mt-2 text-3xl font-extrabold uppercase leading-[0.95] tracking-tightest text-brand-dark md:text-4xl lg:text-5xl">
+              Fusión con Sazón?
+            </h3>
+            <span className="relative mt-5 block h-1 w-16 rounded-full bg-brand-mustard" />
+            <p className="relative mt-6 max-w-prose whitespace-pre-line leading-relaxed text-brand-dark/70">
+              {get("nosotros_why")}
+            </p>
+          </GlassPanel>
+        </RevealOnScroll>
         <div className="relative order-1 h-72 overflow-hidden md:order-2 md:h-auto md:min-h-[600px]">
           {whyImg && <img src={whyImg.url} alt="" className="h-full w-full object-cover" />}
           <span className="pointer-events-none absolute inset-y-0 left-0 hidden w-24 bg-gradient-to-r from-[#FDF3E4] to-transparent md:block" />
