@@ -10,6 +10,8 @@ import RevealOnScroll from "../components/ui/RevealOnScroll";
 import TiltCard from "../components/ui/TiltCard";
 import FloatingElement from "../components/ui/FloatingElement";
 import GlassPanel from "../components/ui/GlassPanel";
+import ParallaxGroup from "../components/ui/ParallaxGroup";
+import ParallaxLayer from "../components/ui/ParallaxLayer";
 
 /* Íconos inline: no sumamos dependencias nuevas al proyecto. */
 function IconWhatsApp({ className = "w-5 h-5" }: { className?: string }) {
@@ -272,38 +274,57 @@ export default function Home() {
           </div>
 
           {/* --- Collage de fotos --- */}
-          <RevealOnScroll delay={200} className="relative mx-auto w-full max-w-md lg:max-w-none">
-            <TiltCard maxTilt={6} className="relative aspect-[4/5] w-full overflow-hidden rounded-[2.25rem] bg-white/5 shadow-warm-lg ring-1 ring-white/10">
-              {tortasHero?.url && (
-                <img
-                  src={tortasHero.url}
-                  alt="Tortas artesanales de Fusión con Sazón"
-                  className="h-full w-full object-cover"
-                />
+          <RevealOnScroll delay={200}>
+            <ParallaxGroup className="relative mx-auto w-full max-w-md lg:max-w-none">
+              {/* Capa: sombra proyectada, casi no se mueve */}
+              <ParallaxLayer
+                depth={0.1}
+                range={16}
+                className="pointer-events-none absolute inset-x-6 -bottom-4 top-10 rounded-[2.25rem] bg-black/30 blur-2xl"
+              >
+                {null}
+              </ParallaxLayer>
+
+              {/* Capa: foto principal */}
+              <ParallaxLayer
+                depth={0.3}
+                className="relative aspect-[4/5] w-full overflow-hidden rounded-[2.25rem] bg-white/5 shadow-warm-lg ring-1 ring-white/10"
+              >
+                {tortasHero?.url && (
+                  <img
+                    src={tortasHero.url}
+                    alt="Tortas artesanales de Fusión con Sazón"
+                    className="h-full w-full object-cover"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/55 via-transparent to-transparent" />
+              </ParallaxLayer>
+
+              {/* Capa: foto secundaria flotante */}
+              {heroSecondary && (
+                <FloatingElement className="absolute -bottom-8 -left-6 hidden sm:block">
+                  <ParallaxLayer depth={0.6} className="h-40 w-40 overflow-hidden rounded-3xl shadow-warm-lg ring-4 ring-brand-dark">
+                    <img src={heroSecondary} alt="Catering de Fusión con Sazón" className="h-full w-full object-cover" />
+                  </ParallaxLayer>
+                </FloatingElement>
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/55 via-transparent to-transparent" />
-            </TiltCard>
 
-            {/* Foto secundaria flotante */}
-            {heroSecondary && (
-              <FloatingElement className="absolute -bottom-8 -left-6 hidden sm:block">
-                <TiltCard maxTilt={8} className="h-40 w-40 overflow-hidden rounded-3xl shadow-warm-lg ring-4 ring-brand-dark">
-                  <img src={heroSecondary} alt="Catering de Fusión con Sazón" className="h-full w-full object-cover" />
-                </TiltCard>
+              {/* Capa: sello giratorio, la que más se mueve */}
+              <FloatingElement delay={1.2} className="absolute -right-3 -top-7 h-24 w-24 md:h-28 md:w-28">
+                <ParallaxLayer depth={1} className="h-full w-full">
+                  <SpinningBadge className="h-full w-full" />
+                </ParallaxLayer>
               </FloatingElement>
-            )}
 
-            {/* Sello giratorio */}
-            <FloatingElement delay={1.2} className="absolute -right-3 -top-7 h-24 w-24 md:h-28 md:w-28">
-              <SpinningBadge className="h-full w-full" />
-            </FloatingElement>
-
-            {/* Chip de reseñas */}
-            <GlassPanel className="absolute -bottom-5 right-4 flex items-center gap-2 !border-transparent !bg-white/70 px-4 py-2.5">
-              <IconGoogle className="h-4 w-4 shrink-0" />
-              <span className="text-sm font-extrabold text-brand-dark">5.0</span>
-              <span className="text-xs tracking-tighter text-brand-mustard">★★★★★</span>
-            </GlassPanel>
+              {/* Capa: chip de reseñas, también la más cercana */}
+              <ParallaxLayer depth={1} className="absolute -bottom-5 right-4">
+                <GlassPanel className="flex items-center gap-2 !border-transparent !bg-white/70 px-4 py-2.5">
+                  <IconGoogle className="h-4 w-4 shrink-0" />
+                  <span className="text-sm font-extrabold text-brand-dark">5.0</span>
+                  <span className="text-xs tracking-tighter text-brand-mustard">★★★★★</span>
+                </GlassPanel>
+              </ParallaxLayer>
+            </ParallaxGroup>
           </RevealOnScroll>
         </div>
 
