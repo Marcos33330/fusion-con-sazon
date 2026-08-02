@@ -337,24 +337,24 @@ export default function Home() {
       {/* ================================================================
           CATEGORÍAS — tarjetas editoriales con foto a sangre.
       ================================================================= */}
-      <section className="mx-auto max-w-6xl px-4 py-20 md:py-28">
-        <div className="mb-12 max-w-2xl">
+      <section className="mx-auto max-w-6xl px-4 py-28 md:py-36">
+        <div className="mb-16 max-w-2xl">
           <RevealOnScroll>
             <p className="font-script -rotate-2 text-4xl leading-none text-brand md:text-5xl">
               Elegí tu
             </p>
           </RevealOnScroll>
           <RevealOnScroll delay={70}>
-            <h2 className="font-display mt-1 text-4xl font-extrabold uppercase tracking-tightest text-brand-dark md:text-5xl">
+            <h2 className="font-display mt-2 text-5xl font-extrabold uppercase tracking-tightest text-brand-dark md:text-7xl">
               Experiencia
             </h2>
           </RevealOnScroll>
           <RevealOnScroll delay={110}>
-            <span className="mt-5 block h-1 w-16 rounded-full bg-brand-mustard" />
+            <span className="mt-6 block h-1 w-16 rounded-full bg-brand-mustard" />
           </RevealOnScroll>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-3">
           {foodCards.map((c, i) => (
             <RevealOnScroll key={c.to} delay={i * 110}>
               <TiltCard
@@ -383,7 +383,7 @@ export default function Home() {
                     0{i + 1}
                   </span>
 
-                  <div className="relative p-6 md:p-7">
+                  <div className="relative p-8 md:p-10">
                     <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-mustard">{c.tag}</span>
                     <h3 className="font-display mt-2 text-2xl font-extrabold uppercase leading-tight tracking-tight text-white md:text-[1.7rem]">
                       {c.label}
@@ -463,40 +463,34 @@ export default function Home() {
           CÓMO TRABAJAMOS — sección nueva. Los textos salen de las claves
           home_paso_*, editables desde el panel admin (con fallback).
       ================================================================= */}
-      <section className="mx-auto max-w-6xl px-4 py-20 md:py-24">
-        <div className="mb-12 max-w-2xl">
+      <section className="mx-auto max-w-4xl px-4 py-28 md:py-36">
+        <div className="mb-16 max-w-2xl">
           <RevealOnScroll>
             <p className="font-script -rotate-2 text-4xl leading-none text-brand md:text-5xl">
               Así de simple
             </p>
           </RevealOnScroll>
           <RevealOnScroll delay={70}>
-            <h2 className="font-display mt-1 text-4xl font-extrabold uppercase tracking-tightest text-brand-dark md:text-5xl">
+            <h2 className="font-display mt-2 text-5xl font-extrabold uppercase tracking-tightest text-brand-dark md:text-7xl">
               Cómo trabajamos
             </h2>
           </RevealOnScroll>
           <RevealOnScroll delay={110}>
-            <span className="mt-5 block h-1 w-16 rounded-full bg-brand-mustard" />
+            <span className="mt-6 block h-1 w-16 rounded-full bg-brand-mustard" />
           </RevealOnScroll>
         </div>
 
-        <ol className="grid gap-6 md:grid-cols-3">
+        <ol className="flex flex-col gap-10 md:gap-12">
           {steps.map((s, i) => (
-            <li
-              key={s.title}
-              className="group relative overflow-hidden rounded-[1.5rem] border border-brand-dark/10 bg-white p-8 transition-transform duration-500 hover:-translate-y-1.5"
-            >
-              <span className="font-display pointer-events-none absolute -right-2 -top-4 text-[7rem] font-extrabold leading-none text-brand-dark/5 transition-colors duration-500 group-hover:text-brand/10">
+            <li key={s.title} className="flex items-start gap-6 md:gap-8">
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand-mustard font-display text-xl font-extrabold text-brand-dark md:h-16 md:w-16 md:text-2xl">
                 {i + 1}
               </span>
-              <RevealOnScroll delay={i * 110}>
-                <span className="relative flex h-11 w-11 items-center justify-center rounded-full bg-brand-mustard font-display text-lg font-extrabold text-brand-dark">
-                  {i + 1}
-                </span>
-                <h3 className="font-display relative mt-5 text-xl font-extrabold uppercase tracking-tight text-brand-dark">
+              <RevealOnScroll delay={i * 110} className="pt-1">
+                <h3 className="font-display text-2xl font-extrabold uppercase tracking-tight text-brand-dark md:text-3xl">
                   {s.title}
                 </h3>
-                <p className="relative mt-3 leading-relaxed text-brand-dark/70">{s.body}</p>
+                <p className="mt-3 max-w-xl text-lg leading-relaxed text-brand-dark/70">{s.body}</p>
               </RevealOnScroll>
             </li>
           ))}
