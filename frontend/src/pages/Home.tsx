@@ -458,8 +458,11 @@ export default function Home() {
 
         <ol className="grid gap-6 md:grid-cols-3">
           {steps.map((s, i) => (
-            <RevealOnScroll key={s.title} delay={i * 110}>
-              <li className="group relative overflow-hidden rounded-[1.5rem] border border-brand-dark/10 bg-white p-8 transition-transform duration-500 hover:-translate-y-1.5">
+            <li
+              key={s.title}
+              className="group relative overflow-hidden rounded-[1.5rem] border border-brand-dark/10 bg-white p-8 transition-transform duration-500 hover:-translate-y-1.5"
+            >
+              <RevealOnScroll delay={i * 110}>
                 <span className="font-display absolute -right-2 -top-4 text-[7rem] font-extrabold leading-none text-brand-dark/5 transition-colors duration-500 group-hover:text-brand/10">
                   {i + 1}
                 </span>
@@ -470,8 +473,8 @@ export default function Home() {
                   {s.title}
                 </h3>
                 <p className="relative mt-3 leading-relaxed text-brand-dark/70">{s.body}</p>
-              </li>
-            </RevealOnScroll>
+              </RevealOnScroll>
+            </li>
           ))}
         </ol>
       </section>
