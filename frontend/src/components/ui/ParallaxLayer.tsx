@@ -3,7 +3,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useParallaxContext } from "./ParallaxGroup";
 
 interface ParallaxLayerProps {
-  children: ReactNode;
+  children?: ReactNode;
   className?: string;
   depth?: number;
   range?: number;

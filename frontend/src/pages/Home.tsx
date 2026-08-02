@@ -281,9 +281,7 @@ export default function Home() {
                 depth={0.1}
                 range={16}
                 className="pointer-events-none absolute inset-x-6 -bottom-4 top-10 rounded-[2.25rem] bg-black/30 blur-2xl"
-              >
-                {null}
-              </ParallaxLayer>
+              />
 
               {/* Capa: foto principal */}
               <ParallaxLayer
