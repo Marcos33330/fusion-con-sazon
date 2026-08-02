@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../api/client";
 import { MediaItem, MediaPage } from "../types";
+import TiltCard from "./ui/TiltCard";
 
 interface Props {
   page: MediaPage;
@@ -51,8 +52,9 @@ export default function MediaGrid({ page, category }: Props) {
   return (
     <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:gap-7">
       {ordered.map((item, i) => (
-        <figure
+        <TiltCard
           key={item.id}
+          maxTilt={5}
           className="group relative aspect-square overflow-hidden rounded-2xl bg-brand-gray shadow-warm transition-shadow duration-300 hover:shadow-warm-lg"
         >
           {item.type === "IMAGE" ? (
@@ -78,7 +80,7 @@ export default function MediaGrid({ page, category }: Props) {
               <p className="w-full p-4 text-sm font-semibold text-white">{item.title}</p>
             </figcaption>
           )}
-        </figure>
+        </TiltCard>
       ))}
     </div>
   );
