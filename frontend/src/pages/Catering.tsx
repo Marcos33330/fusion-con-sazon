@@ -11,14 +11,14 @@ export default function Catering() {
   return (
     <PublicLayout>
       {/* Encabezado premium, mismo estilo que Nosotros/Inicio */}
-      <section className="bg-brand-dark py-16 md:py-20 text-center px-4">
-        <h1 className="text-4xl md:text-5xl font-extrabold uppercase tracking-tight text-white">Catering</h1>
-        <span className="inline-block mt-4 w-24 h-1 bg-brand-mustard rounded-full" />
+      <section className="bg-brand-dark py-24 md:py-32 text-center px-4">
+        <h1 className="text-5xl md:text-7xl font-extrabold uppercase tracking-tight text-white">Catering</h1>
+        <span className="inline-block mt-6 w-24 h-1 bg-brand-mustard rounded-full" />
       </section>
 
       <Marquee items={["Catering a medida", "Sabor y Eventos", "Comida Venezolana", "Comida Uruguaya"]} />
 
-      <section className="max-w-6xl mx-auto px-4 py-16 md:py-20">
+      <section className="max-w-6xl mx-auto px-4 py-20 md:py-28">
         <div className="flex justify-center gap-3 flex-wrap mb-10">
           {CATEGORIES.map((cat) => (
             <button
