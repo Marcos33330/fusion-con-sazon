@@ -47,6 +47,17 @@ Vineyard no usa micro-interacciones de tilt, parallax ni glassmorphism en ningú
 - **Foto final + CTA**: sección de cierre con foto real a sangre completa y un botón flotante centrado antes del footer.
 - **Foto en arco**: la foto de Herminia y Oscar (ya usada en Home y Nosotros) se recorta con un borde superior en arco/domo como motivo visual distintivo, en al menos un lugar.
 
+## Efectos de scroll (inspeccionados en el sitio real)
+
+Se inspeccionó el DOM y los estilos computados de vineyard.co.za directamente. Hallazgos:
+
+- **No usa ninguna librería de animación** (ni GSAP, ni Lenis, ni Locomotive, ni AOS). Todo es código propio, así que se puede replicar con Framer Motion (ya instalado) o CSS puro sin sumar dependencias.
+- **Parallax en imágenes** (`data-parallax-speed="15"`): el marco exterior mide 770px con `overflow: hidden`, y la imagen dentro mide 1000px con `object-fit: cover` — o sea la imagen es ~30% más alta que su contenedor. Al scrollear, la imagen se desplaza verticalmente dentro del marco, revelando distinta porción. Efecto: la foto se mueve más lento que la página.
+- **Revelado de títulos por líneas enmascaradas** (`data-title-animate` / `data-split`): cada título se parte en líneas; la línea exterior tiene `overflow: hidden` y la interior se traslada verticalmente. Cada línea "sube" desde detrás de la máscara, escalonada. Es el efecto que le da la sensación editorial/premium a los títulos.
+- **Nav píldora al scrollear**: ya cubierto por el rediseño de Navbar descrito arriba.
+
+Estos tres efectos se suman al alcance de esta prueba, aplicados a la Home.
+
 ## Alcance de esta prueba
 
 Es una prueba — se aplica **solo a la página Home** (`frontend/src/pages/Home.tsx`) más los componentes compartidos que la afectan directamente (`Navbar.tsx`, `Footer.tsx`). Las demás páginas públicas (Nosotros, Tortas y Postres, Catering, Eventos) **no se tocan** en esta iteración — si el resultado convence, se extiende después en un plan aparte.

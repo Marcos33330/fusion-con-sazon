@@ -1057,6 +1057,262 @@ git commit -m "feat: full-bleed CTA photo and mega footer"
 
 ---
 
+### Task 9: `MaskedLines` primitive — masked line-by-line title reveal
+
+**Files:**
+- Create: `frontend/src/components/ui/MaskedLines.tsx`
+
+**Interfaces:**
+- Produces:
+  ```ts
+  interface MaskedLinesProps {
+    children: string;        // plain text only — it gets split by line
+    className?: string;      // applied to the outer wrapper
+    lineClassName?: string;  // applied to each inner line
+    stagger?: number;        // seconds between lines, default 0.08
+  }
+  export default function MaskedLines(props: MaskedLinesProps): JSX.Element;
+  ```
+
+Replicates Vineyard's title effect: text is split into lines, each line wrapped in an `overflow: hidden` mask, and the inner line translates up from 100% to 0 when scrolled into view. Splitting is done per **word-group by explicit newline** (not by measuring wrapped lines) — measuring real wrapped lines requires DOM measurement and a re-render, which is far more complexity than this trial needs. Callers pass text with `\n` where they want line breaks.
+
+- [ ] **Step 1: Write the component**
+
+```tsx
+import { motion } from "framer-motion";
+
+interface MaskedLinesProps {
+  children: string;
+  className?: string;
+  lineClassName?: string;
+  stagger?: number;
+}
+
+// Revelado de títulos por líneas enmascaradas, como vineyard.co.za: cada
+// línea vive dentro de un contenedor con overflow hidden y entra desde
+// abajo. Las líneas se separan por "\n" explícito — medir el wrapping real
+// exigiría medir el DOM y volver a renderizar, complejidad que no vale para
+// esta prueba.
+export default function MaskedLines({
+  children,
+  className,
+  lineClassName,
+  stagger = 0.08,
+}: MaskedLinesProps) {
+  const lines = children.split("\n");
+
+  return (
+    <span className={className}>
+      {lines.map((line, i) => (
+        <span key={i} className="block overflow-hidden">
+          <motion.span
+            className={`block ${lineClassName ?? ""}`}
+            initial={{ y: "110%" }}
+            whileInView={{ y: "0%" }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.7, delay: i * stagger, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {line}
+          </motion.span>
+        </span>
+      ))}
+    </span>
+  );
+}
+```
+
+- [ ] **Step 2: Verify**
+
+Run: `npm run typecheck`
+Expected: no errors.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add frontend/src/components/ui/MaskedLines.tsx
+git commit -m "feat: add MaskedLines primitive for masked line reveals"
+```
+
+---
+
+### Task 10: `ParallaxImage` primitive — image drifts inside a shorter frame
+
+**Files:**
+- Create: `frontend/src/components/ui/ParallaxImage.tsx`
+
+**Interfaces:**
+- Produces:
+  ```ts
+  interface ParallaxImageProps {
+    src: string;
+    alt?: string;
+    className?: string;  // applied to the outer frame (set its height here)
+    overflowPct?: number; // how much taller the image is than the frame, default 30
+  }
+  export default function ParallaxImage(props: ParallaxImageProps): JSX.Element;
+  ```
+
+Replicates Vineyard's `data-parallax-speed` setup exactly: a frame with `overflow: hidden`, containing an image that is `overflowPct`% taller than the frame, translated vertically based on the frame's position in the viewport. Uses Framer Motion's `useScroll`/`useTransform` so it stays in sync with real scroll position and respects the app-wide `MotionConfig reducedMotion="user"` already set in `main.tsx`.
+
+- [ ] **Step 1: Write the component**
+
+```tsx
+import { useRef } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+
+interface ParallaxImageProps {
+  src: string;
+  alt?: string;
+  className?: string;
+  overflowPct?: number;
+}
+
+// Parallax como vineyard.co.za: el marco recorta (overflow hidden) y la
+// imagen, más alta que el marco, se desplaza dentro de él según el scroll.
+export default function ParallaxImage({
+  src,
+  alt = "",
+  className,
+  overflowPct = 30,
+}: ParallaxImageProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  // La imagen sobra overflowPct% en alto; la desplazamos entre los dos
+  // extremos de ese sobrante para que nunca se vea un borde vacío.
+  const half = overflowPct / 2;
+  const y = useTransform(scrollYProgress, [0, 1], [`-${half}%`, `${half}%`]);
+
+  return (
+    <div ref={ref} className={`relative overflow-hidden ${className ?? ""}`}>
+      <motion.img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        className="absolute inset-x-0 w-full object-cover"
+        style={
+          prefersReducedMotion
+            ? { top: 0, height: "100%" }
+            : { y, top: `-${half}%`, height: `${100 + overflowPct}%` }
+        }
+      />
+    </div>
+  );
+}
+```
+
+The frame (`className` from the caller) sets the visible height and clips; the image is `100 + overflowPct`% tall, offset up by `half`%, and drifts by `y` between `-half%` and `+half%` — so the surplus is always split between top and bottom and no empty edge can appear at any scroll position.
+
+- [ ] **Step 2: Verify**
+
+Run: `npm run typecheck`
+Expected: no errors.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add frontend/src/components/ui/ParallaxImage.tsx
+git commit -m "feat: add ParallaxImage primitive"
+```
+
+---
+
+### Task 11: Apply the scroll effects to Home
+
+**Files:**
+- Modify: `frontend/src/pages/Home.tsx`
+
+**Interfaces:**
+- Consumes: `MaskedLines` (Task 9), `ParallaxImage` (Task 10).
+
+- [ ] **Step 1: Import both primitives**
+
+```tsx
+import MaskedLines from "../components/ui/MaskedLines";
+import ParallaxImage from "../components/ui/ParallaxImage";
+```
+
+- [ ] **Step 2: Use `MaskedLines` on the main section headings**
+
+For each of these headings, replace the plain text child with a `MaskedLines` wrapper, keeping every existing class on the heading itself:
+
+- "Experiencia" (Categorías section)
+- "Nosotros" (Nosotros-preview section)
+- "Cómo trabajamos"
+- "Lo que dicen de nosotros" (Testimonios, after Task 6)
+- "Seguinos en Instagram" (after Task 7)
+- "¿Armamos algo rico?" (CTA, after Task 8)
+
+Pattern — replace:
+
+```tsx
+<h2 className="font-display mt-1 text-4xl italic text-brand-dark md:text-5xl">
+  Experiencia
+</h2>
+```
+
+with:
+
+```tsx
+<h2 className="font-display mt-1 text-4xl italic text-brand-dark md:text-5xl">
+  <MaskedLines>Experiencia</MaskedLines>
+</h2>
+```
+
+For the multi-word headings where a line break reads better, pass an explicit `\n`, e.g.:
+
+```tsx
+<h2 className="font-display text-4xl italic text-brand-dark md:text-5xl">
+  <MaskedLines>{"Lo que dicen\nde nosotros"}</MaskedLines>
+</h2>
+```
+
+Note: where a heading is currently wrapped in `<RevealOnScroll>`, remove that wrapper for that heading only — `MaskedLines` now provides its own scroll-triggered entrance, and stacking both would double-animate it. Leave `RevealOnScroll` in place everywhere it wraps non-heading content.
+
+- [ ] **Step 3: Use `ParallaxImage` for the full-bleed photos**
+
+Replace the plain `<img>` in the hero with:
+
+```tsx
+        {tortasHero?.url && (
+          <ParallaxImage
+            src={tortasHero.url}
+            alt="Tortas artesanales de Fusión con Sazón"
+            className="absolute inset-0 h-full w-full"
+          />
+        )}
+```
+
+And in the final CTA section (after Task 8), replace its `<img>` the same way:
+
+```tsx
+        {cateringHero?.url && (
+          <ParallaxImage src={cateringHero.url} className="absolute inset-0 h-full w-full" />
+        )}
+```
+
+- [ ] **Step 4: Verify**
+
+Run: `npm run typecheck`
+Expected: no errors.
+
+Run: `npm run dev`, open `http://localhost:5173/`:
+- Scrolling past each section heading: the heading's lines rise into place from behind an invisible mask, staggered, instead of a plain fade.
+- The hero photo and the final CTA photo drift vertically at a slower rate than the page as you scroll — the frame stays put, the photo moves inside it, with no empty edges appearing at any scroll position.
+- With OS "reduce motion" enabled: no line reveals, no photo drift — content appears in final position immediately.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add frontend/src/pages/Home.tsx
+git commit -m "feat: apply masked line reveals and image parallax to Home"
+```
+
+---
+
 ## Self-review notes
 
 - **Spec coverage:** Task 1 covers typography/CSS foundations. Task 2 covers the Navbar. Task 3 covers the hero. Tasks 4-8 cover every remaining Home section named in the spec's mapping table (Categorías, Nosotros-preview arch photo, Cómo trabajamos heading, Testimonios, Instagram strip, Cómo llegar, CTA, Footer). The spec's explicitly descoped items (blog grid, property map) are not implemented anywhere in this plan.
