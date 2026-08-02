@@ -168,146 +168,62 @@ export default function Home() {
   return (
     <PublicLayout>
       {/* ================================================================
-          HERO — fondo chocolate con grano, titular grande y collage de
-          fotos reales. Reemplaza al hero centrado plano anterior.
+          HERO — foto real a pantalla completa con overlay oscuro, titular
+          centrado en serif, barra flotante de contacto. Referencia:
+          vineyard.co.za — sin tilt ni collage, una sola foto protagonista.
       ================================================================= */}
-      <section className="grain relative overflow-hidden bg-brand-dark text-white">
-        {/* Halos cálidos: dan profundidad sin usar un gradiente agresivo. */}
-        <div
-          className="pointer-events-none absolute -top-40 -left-32 h-[34rem] w-[34rem] rounded-full opacity-40 blur-3xl"
-          style={{ background: "radial-gradient(circle, rgba(255,166,16,0.55) 0%, transparent 65%)" }}
-        />
-        <div
-          className="pointer-events-none absolute -bottom-52 right-[-10rem] h-[38rem] w-[38rem] rounded-full opacity-35 blur-3xl"
-          style={{ background: "radial-gradient(circle, rgba(232,5,65,0.6) 0%, transparent 65%)" }}
-        />
+      <section className="relative flex min-h-[85vh] items-center justify-center overflow-hidden text-white">
+        {tortasHero?.url && (
+          <img
+            src={tortasHero.url}
+            alt="Tortas artesanales de Fusión con Sazón"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-espresso via-brand-espresso/50 to-brand-espresso/20" />
 
-        {/* Doodles dibujados a mano, heredados del diseño anterior. */}
-        <svg
-          className="pointer-events-none absolute top-24 left-8 hidden w-14 h-14 -rotate-12 text-brand-mustard/40 lg:block"
-          viewBox="0 0 64 64"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M14 6v18c0 3.5 2.7 5.5 5.5 5.5S25 27.5 25 24V6M19.5 6v13.5M14 34v24" />
-          <path d="M40 6c-6 0-9.5 6-9.5 13 0 5.5 3 8.5 6.5 9.5L35 58" />
-        </svg>
-        <svg
-          className="pointer-events-none absolute bottom-28 left-16 hidden w-16 h-16 rotate-6 text-white/15 lg:block"
-          viewBox="0 0 64 64"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          aria-hidden="true"
-        >
-          <path d="M16 52c8-6 8-14 0-20s-8-14 0-20" />
-          <path d="M32 52c8-6 8-14 0-20s-8-14 0-20" />
-          <path d="M48 52c8-6 8-14 0-20s-8-14 0-20" />
-        </svg>
+        <div className="relative mx-auto max-w-3xl px-4 pb-24 pt-32 text-center">
+          <RevealOnScroll>
+            <span className="inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.22em] backdrop-blur-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-mustard" />
+              Montevideo · La Unión
+            </span>
+          </RevealOnScroll>
 
-        <div className="relative mx-auto grid max-w-6xl items-center gap-14 px-4 py-20 md:py-28 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
-          {/* --- Columna de texto --- */}
-          <div className="text-center lg:text-left">
-            <RevealOnScroll>
-              <span className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.22em] text-white/70 backdrop-blur-sm">
-                <span className="h-1.5 w-1.5 rounded-full bg-brand-mustard" />
-                Montevideo · La Unión
-              </span>
-            </RevealOnScroll>
+          <RevealOnScroll delay={100}>
+            <h1 className="font-display mt-8 text-5xl italic leading-[1.05] md:text-7xl">
+              <Headline text={heroText} />
+            </h1>
+          </RevealOnScroll>
 
-            <RevealOnScroll delay={80}>
-              <h1 className="font-display mt-7 text-[clamp(2.5rem,6.4vw,4.75rem)] font-extrabold uppercase leading-[0.92] tracking-tightest">
-                <Headline text={heroText} />
-              </h1>
-            </RevealOnScroll>
-
-            <RevealOnScroll delay={160}>
-              <p className="mx-auto mt-7 max-w-md text-lg leading-relaxed text-white/70 lg:mx-0">
-                {get(
-                  "home_hero_sub",
-                  "Catering, tortas y postres artesanales hechos por una pareja que cocina desde hace más de 20 años. Sabor de hogar, para tu mesa."
-                )}
-              </p>
-            </RevealOnScroll>
-
-            <RevealOnScroll delay={240}>
-              <div className="mt-10 flex flex-col gap-3.5 sm:flex-row sm:justify-center lg:justify-start">
-                <a
-                  href={waHref}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-brand px-8 py-4 text-sm font-extrabold uppercase tracking-wide text-white shadow-warm transition hover:bg-brand-mustard hover:text-brand-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-mustard"
-                >
-                  <IconWhatsApp className="h-5 w-5" />
-                  Solicitar presupuesto
-                </a>
-                <Link
-                  to="/catering"
-                  className="group inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/25 px-8 py-4 text-sm font-extrabold uppercase tracking-wide text-white transition hover:border-white hover:bg-white hover:text-brand-dark"
-                >
-                  Ver el menú
-                  <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                </Link>
-              </div>
-            </RevealOnScroll>
-
-            {/* Datos duros: dan credibilidad justo debajo del CTA. */}
-            <RevealOnScroll delay={320}>
-              <dl className="mt-12 flex flex-wrap justify-center gap-x-8 gap-y-5 border-t border-white/10 pt-8 lg:justify-start">
-                {stats.map((s) => (
-                  <div key={s.label} className="text-center lg:text-left">
-                    <dt className="font-display text-3xl font-extrabold text-brand-mustard">{s.value}</dt>
-                    <dd className="mt-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/50">
-                      {s.label}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </RevealOnScroll>
-          </div>
-
-          {/* --- Collage de fotos --- */}
-          <RevealOnScroll delay={200} className="relative mx-auto w-full max-w-md lg:max-w-none">
-            <TiltCard maxTilt={6} className="relative aspect-[4/5] w-full overflow-hidden rounded-[2.25rem] bg-white/5 shadow-warm-lg ring-1 ring-white/10">
-              {tortasHero?.url && (
-                <img
-                  src={tortasHero.url}
-                  alt="Tortas artesanales de Fusión con Sazón"
-                  className="h-full w-full object-cover"
-                />
+          <RevealOnScroll delay={200}>
+            <p className="mx-auto mt-7 max-w-lg text-lg leading-relaxed text-white/80">
+              {get(
+                "home_hero_sub",
+                "Catering, tortas y postres artesanales hechos por una pareja que cocina desde hace más de 20 años. Sabor de hogar, para tu mesa."
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/55 via-transparent to-transparent" />
-            </TiltCard>
-
-            {/* Foto secundaria flotante */}
-            {heroSecondary && (
-              <FloatingElement className="absolute -bottom-8 -left-6 hidden sm:block">
-                <TiltCard maxTilt={8} className="h-40 w-40 overflow-hidden rounded-3xl shadow-warm-lg ring-4 ring-brand-dark">
-                  <img src={heroSecondary} alt="Catering de Fusión con Sazón" className="h-full w-full object-cover" />
-                </TiltCard>
-              </FloatingElement>
-            )}
-
-            {/* Sello giratorio */}
-            <FloatingElement delay={1.2} className="absolute -right-3 -top-7 h-24 w-24 md:h-28 md:w-28">
-              <SpinningBadge className="h-full w-full" />
-            </FloatingElement>
-
-            {/* Chip de reseñas */}
-            <GlassPanel className="absolute -bottom-5 right-4 flex items-center gap-2 !border-transparent !bg-white/70 px-4 py-2.5">
-              <IconGoogle className="h-4 w-4 shrink-0" />
-              <span className="text-sm font-extrabold text-brand-dark">5.0</span>
-              <span className="text-xs tracking-tighter text-brand-mustard">★★★★★</span>
-            </GlassPanel>
+            </p>
           </RevealOnScroll>
         </div>
 
-        <div className="deco-divider" style={{ ["--deco-color" as string]: "#FFA610" }} />
+        {/* Barra flotante de contacto, pegada al borde inferior del hero. */}
+        <RevealOnScroll delay={280} className="absolute inset-x-4 bottom-6 mx-auto max-w-2xl md:inset-x-0">
+          <div className="flex flex-col items-stretch gap-3 rounded-2xl bg-white px-5 py-4 text-brand-dark shadow-warm-lg sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-center sm:text-left">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-mustard">+20 años · 5.0 en Google</p>
+              <p className="mt-1 text-sm text-brand-dark/70">100% casero, sin atajos</p>
+            </div>
+            <a
+              href={waHref}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center gap-2.5 rounded-full bg-brand px-6 py-3 text-sm font-extrabold uppercase tracking-wide text-white transition hover:bg-brand-mustard hover:text-brand-dark"
+            >
+              <IconWhatsApp className="h-5 w-5" />
+              Solicitar presupuesto
+            </a>
+          </div>
+        </RevealOnScroll>
       </section>
 
       {/* Cinta en loop infinito */}
