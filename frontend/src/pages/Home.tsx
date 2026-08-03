@@ -7,6 +7,8 @@ import PublicLayout from "../components/PublicLayout";
 import Marquee from "../components/Marquee";
 import ImageMarquee from "../components/ImageMarquee";
 import RevealOnScroll from "../components/ui/RevealOnScroll";
+import MaskedLines from "../components/ui/MaskedLines";
+import ParallaxImage from "../components/ui/ParallaxImage";
 
 /* Íconos inline: no sumamos dependencias nuevas al proyecto. */
 function IconWhatsApp({ className = "w-5 h-5" }: { className?: string }) {
@@ -136,10 +138,10 @@ export default function Home() {
       ================================================================= */}
       <section className="relative flex min-h-[85vh] items-center justify-center overflow-hidden text-white">
         {tortasHero?.url && (
-          <img
+          <ParallaxImage
             src={tortasHero.url}
             alt="Tortas artesanales de Fusión con Sazón"
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full"
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-brand-espresso via-brand-espresso/50 to-brand-espresso/20" />
@@ -201,11 +203,9 @@ export default function Home() {
               Elegí tu
             </p>
           </RevealOnScroll>
-          <RevealOnScroll delay={70}>
-            <h2 className="font-display mt-1 text-4xl italic text-brand-dark md:text-5xl">
-              Experiencia
-            </h2>
-          </RevealOnScroll>
+          <h2 className="font-display mt-1 text-4xl italic text-brand-dark md:text-5xl">
+            <MaskedLines>Experiencia</MaskedLines>
+          </h2>
           <RevealOnScroll delay={110}>
             <span className="mt-5 block h-1 w-16 rounded-full bg-brand-mustard" />
           </RevealOnScroll>
@@ -282,11 +282,9 @@ export default function Home() {
           </RevealOnScroll>
 
           <div className="text-center lg:text-left">
-            <RevealOnScroll>
-              <h2 className="font-display text-5xl italic leading-[1.05] text-brand-dark md:text-6xl lg:text-7xl">
-                Nosotros
-              </h2>
-            </RevealOnScroll>
+            <h2 className="font-display text-5xl italic leading-[1.05] text-brand-dark md:text-6xl lg:text-7xl">
+              <MaskedLines>Nosotros</MaskedLines>
+            </h2>
             <RevealOnScroll delay={80}>
               <span className="mx-auto mt-6 block h-1.5 w-20 rounded-full bg-brand lg:mx-0" />
             </RevealOnScroll>
@@ -322,11 +320,9 @@ export default function Home() {
               Así de simple
             </p>
           </RevealOnScroll>
-          <RevealOnScroll delay={70}>
-            <h2 className="font-display mt-1 text-4xl italic text-brand-dark md:text-5xl">
-              Cómo trabajamos
-            </h2>
-          </RevealOnScroll>
+          <h2 className="font-display mt-1 text-4xl italic text-brand-dark md:text-5xl">
+            <MaskedLines>Cómo trabajamos</MaskedLines>
+          </h2>
           <RevealOnScroll delay={110}>
             <span className="mt-5 block h-1 w-16 rounded-full bg-brand-mustard" />
           </RevealOnScroll>
@@ -360,9 +356,11 @@ export default function Home() {
           No es una integración real con la API; eso es un proyecto aparte.
       ================================================================= */}
       <section className="px-4 py-20 md:py-24">
-        <RevealOnScroll className="mb-10 text-center">
-          <h2 className="font-display text-4xl italic text-brand-dark md:text-5xl">Seguinos en Instagram</h2>
-        </RevealOnScroll>
+        <div className="mb-10 text-center">
+          <h2 className="font-display text-4xl italic text-brand-dark md:text-5xl">
+            <MaskedLines>Seguinos en Instagram</MaskedLines>
+          </h2>
+        </div>
 
         <div className="mx-auto flex max-w-6xl gap-3 overflow-x-auto pb-2">
           {instaPhotos.map((item, i) => (
@@ -409,11 +407,11 @@ export default function Home() {
       ================================================================= */}
       <section id="testimonios" className="bg-brand-mustard/15 px-4 py-24 md:py-28">
         <div className="mx-auto max-w-6xl">
-          <RevealOnScroll className="mb-16 text-center">
+          <div className="mb-16 text-center">
             <h2 className="font-display text-4xl italic text-brand-dark md:text-5xl">
-              Lo que dicen de nosotros
+              <MaskedLines>{"Lo que dicen\nde nosotros"}</MaskedLines>
             </h2>
-          </RevealOnScroll>
+          </div>
 
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
             {testimonials.map((t, i) => {
@@ -447,13 +445,13 @@ export default function Home() {
 
       <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden text-white">
         {cateringHero?.url && (
-          <img src={cateringHero.url} alt="" className="absolute inset-0 h-full w-full object-cover" />
+          <ParallaxImage src={cateringHero.url} className="absolute inset-0 h-full w-full" />
         )}
         <div className="absolute inset-0 bg-brand-espresso/60" />
         <div className="relative mx-auto flex max-w-2xl flex-col items-center px-4 py-20 text-center">
-          <RevealOnScroll>
-            <h2 className="font-display text-4xl italic leading-tight md:text-6xl">¿Armamos algo rico?</h2>
-          </RevealOnScroll>
+          <h2 className="font-display text-4xl italic leading-tight md:text-6xl">
+            <MaskedLines>¿Armamos algo rico?</MaskedLines>
+          </h2>
           <RevealOnScroll delay={90}>
             <p className="mt-6 max-w-lg text-lg text-white/85">
               {get(
