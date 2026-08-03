@@ -105,6 +105,13 @@ export default function Home() {
     },
   ];
 
+  // Fotos para la tira estilo Instagram: tomamos lo que ya está cargado de
+  // cada rubro. No es una integración real con la API de Instagram — eso
+  // queda para un proyecto aparte.
+  const instaPhotos = [tortasHero, ...tortasPreview.slice(1, 4), cateringHero, eventosHero].filter(
+    (item): item is MediaItem => Boolean(item?.url)
+  );
+
   const steps = [
     {
       title: get("home_paso_1_titulo", "Contanos tu evento"),
@@ -347,6 +354,55 @@ export default function Home() {
           ))}
         </ol>
       </section>
+
+      {/* ================================================================
+          INSTAGRAM — tira de fotos ya cargadas, estilo grid de Instagram.
+          No es una integración real con la API; eso es un proyecto aparte.
+      ================================================================= */}
+      <section className="px-4 py-20 md:py-24">
+        <RevealOnScroll className="mb-10 text-center">
+          <h2 className="font-display text-4xl italic text-brand-dark md:text-5xl">Seguinos en Instagram</h2>
+        </RevealOnScroll>
+
+        <div className="mx-auto flex max-w-6xl gap-3 overflow-x-auto pb-2">
+          {instaPhotos.map((item, i) => (
+            <RevealOnScroll key={item.id} delay={i * 60} className="h-40 w-40 shrink-0 overflow-hidden rounded-xl sm:h-52 sm:w-52">
+              <img src={item.url} alt="" loading="lazy" className="h-full w-full object-cover" />
+            </RevealOnScroll>
+          ))}
+        </div>
+
+        {contact?.instagramUrl && (
+          <div className="mt-8 text-center">
+            <a
+              href={contact.instagramUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2.5 rounded-full bg-brand px-7 py-3.5 text-sm font-extrabold uppercase tracking-wide text-white transition hover:bg-brand-dark"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+              </svg>
+              Ver nuestro Instagram
+            </a>
+          </div>
+        )}
+      </section>
+
+      {/* ================================================================
+          CÓMO LLEGAR — bloque simple de dirección. Reemplaza al mapa
+          interactivo de propiedad de la referencia, que no aplica acá.
+      ================================================================= */}
+      {contact?.address && (
+        <section className="bg-brand-dark px-4 py-16 text-center text-white">
+          <RevealOnScroll>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-mustard">Cómo llegar</p>
+            <p className="font-display mt-3 text-2xl italic md:text-3xl">{contact.address}</p>
+          </RevealOnScroll>
+        </section>
+      )}
 
       {/* ================================================================
           TESTIMONIOS
