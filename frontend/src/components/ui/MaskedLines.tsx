@@ -23,7 +23,7 @@ export default function MaskedLines({
   return (
     <span className={className}>
       {lines.map((line, i) => (
-        <span key={i} className="block overflow-hidden">
+        <span key={i} className="block overflow-hidden pb-[0.18em] -mb-[0.18em]">
           <motion.span
             className={`block ${lineClassName ?? ""}`}
             initial={{ y: "110%" }}

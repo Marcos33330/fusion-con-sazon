@@ -141,12 +141,13 @@ export default function Home() {
           <ParallaxImage
             src={tortasHero.url}
             alt="Tortas artesanales de Fusión con Sazón"
-            className="absolute inset-0 h-full w-full"
+            className="arch-mask absolute inset-0 h-full w-full"
+            priority
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-brand-espresso via-brand-espresso/50 to-brand-espresso/20" />
 
-        <div className="relative mx-auto max-w-3xl px-4 pb-24 pt-32 text-center">
+        <div className="relative mx-auto max-w-3xl px-4 pb-44 pt-32 text-center sm:pb-32">
           <RevealOnScroll>
             <span className="inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.22em] backdrop-blur-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-brand-mustard" />
@@ -230,7 +231,7 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-espresso via-brand-espresso/55 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-95" />
 
                   <span
-                    className="absolute left-6 top-6 font-display text-5xl font-extrabold leading-none opacity-70 transition-opacity duration-500 group-hover:opacity-100"
+                    className="absolute left-6 top-6 font-display text-5xl font-bold leading-none opacity-70 transition-opacity duration-500 group-hover:opacity-100"
                     style={{ color: c.accent }}
                   >
                     0{i + 1}
@@ -238,7 +239,7 @@ export default function Home() {
 
                   <div className="relative p-6 md:p-7">
                     <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-mustard">{c.tag}</span>
-                    <h3 className="font-display mt-2 text-2xl font-extrabold uppercase leading-tight tracking-tight text-white md:text-[1.7rem]">
+                    <h3 className="font-display mt-2 text-2xl font-bold leading-tight text-white md:text-[1.7rem]">
                       {c.label}
                     </h3>
                     <p className="mt-2.5 text-sm leading-relaxed text-white/70">{c.copy}</p>
@@ -276,7 +277,7 @@ export default function Home() {
               <img
                 src={nosotrosPhoto.url}
                 alt="Herminia y Oscar, fundadores de Fusión con Sazón"
-                className="arch-mask relative mx-auto h-[420px] w-[85%] object-cover object-top drop-shadow-2xl md:h-[540px]"
+                className="relative mx-auto h-[420px] w-auto object-contain object-bottom drop-shadow-2xl md:h-[540px]"
               />
             )}
           </RevealOnScroll>
@@ -334,14 +335,14 @@ export default function Home() {
               key={s.title}
               className="group relative overflow-hidden rounded-[1.5rem] border border-brand-dark/10 bg-white p-8 transition-transform duration-500 hover:-translate-y-1.5"
             >
-              <span className="font-display pointer-events-none absolute -right-2 -top-4 text-[7rem] font-extrabold leading-none text-brand-dark/5 transition-colors duration-500 group-hover:text-brand/10">
+              <span className="font-display pointer-events-none absolute -right-2 -top-4 text-[7rem] font-bold leading-none text-brand-dark/5 transition-colors duration-500 group-hover:text-brand/10">
                 {i + 1}
               </span>
               <RevealOnScroll delay={i * 110}>
-                <span className="relative flex h-11 w-11 items-center justify-center rounded-full bg-brand-mustard font-display text-lg font-extrabold text-brand-dark">
+                <span className="relative flex h-11 w-11 items-center justify-center rounded-full bg-brand-mustard font-display text-lg font-bold text-brand-dark">
                   {i + 1}
                 </span>
-                <h3 className="font-display relative mt-5 text-xl font-extrabold uppercase tracking-tight text-brand-dark">
+                <h3 className="font-display relative mt-5 text-xl font-bold text-brand-dark">
                   {s.title}
                 </h3>
                 <p className="relative mt-3 leading-relaxed text-brand-dark/70">{s.body}</p>

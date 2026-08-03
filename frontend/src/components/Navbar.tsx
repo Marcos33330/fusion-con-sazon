@@ -29,7 +29,12 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="sticky top-0 z-40 flex justify-center px-4 pt-0 transition-[padding] duration-300" style={{ paddingTop: scrolled ? "0.75rem" : "0" }}>
+    <div
+      className={`sticky top-0 z-40 flex justify-center pt-0 transition-[padding] duration-300 ${
+        scrolled ? "px-4" : "px-0"
+      }`}
+      style={{ paddingTop: scrolled ? "0.75rem" : "0" }}
+    >
       <header
         className={`w-full transition-all duration-300 ${
           scrolled
@@ -44,12 +49,14 @@ export default function Navbar() {
               alt="Fusión con Sazón"
               className={`w-auto transition-all duration-300 ${scrolled ? "h-8" : "h-11"}`}
             />
-            <span className="hidden flex-col leading-none sm:flex">
-              <span className="font-display text-lg font-semibold text-brand-dark">Fusión con Sazón</span>
-              <span className="mt-0.5 text-[11px] font-semibold uppercase tracking-wide text-brand">
-                Experiencias para compartir
+            {!scrolled && (
+              <span className="hidden flex-col leading-none sm:flex">
+                <span className="font-display text-lg font-semibold text-brand-dark">Fusión con Sazón</span>
+                <span className="mt-0.5 text-[11px] font-semibold uppercase tracking-wide text-brand">
+                  Experiencias para compartir
+                </span>
               </span>
-            </span>
+            )}
           </NavLink>
           <ul className="hidden gap-6 text-sm font-medium md:flex">
             {links.map((link) => (

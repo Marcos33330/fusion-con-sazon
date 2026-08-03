@@ -6,6 +6,9 @@ interface ParallaxImageProps {
   alt?: string;
   className?: string;
   overflowPct?: number;
+  /** Marca la imagen como candidata a LCP: carga eager + fetchPriority alto.
+      Usar solo en la foto principal above-the-fold (el hero). */
+  priority?: boolean;
 }
 
 // Parallax como vineyard.co.za: el marco recorta (overflow hidden) y la
@@ -15,6 +18,7 @@ export default function ParallaxImage({
   alt = "",
   className,
   overflowPct = 30,
+  priority = false,
 }: ParallaxImageProps) {
   const ref = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
@@ -36,7 +40,8 @@ export default function ParallaxImage({
       <motion.img
         src={src}
         alt={alt}
-        loading="lazy"
+        loading={priority ? "eager" : "lazy"}
+        {...(priority ? ({ fetchPriority: "high" } as { fetchPriority: "high" }) : {})}
         className="absolute inset-x-0 w-full object-cover"
         style={
           prefersReducedMotion
