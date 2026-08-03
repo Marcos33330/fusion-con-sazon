@@ -445,35 +445,24 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================================================================
-          CTA FINAL — el -mb-16 cancela el mt-16 del Footer para que la
-          banda quede pegada al pie, sin franja de fondo entre medio.
-      ================================================================= */}
-      <section className="grain relative -mb-16 overflow-hidden bg-brand">
-        <div
-          className="pointer-events-none absolute -top-32 right-0 h-[26rem] w-[26rem] rounded-full opacity-40 blur-3xl"
-          style={{ background: "radial-gradient(circle, rgba(255,166,16,0.7) 0%, transparent 65%)" }}
-        />
-        <div className="relative mx-auto flex max-w-4xl flex-col items-center px-4 py-20 text-center md:py-24">
+      <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden text-white">
+        {cateringHero?.url && (
+          <img src={cateringHero.url} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        )}
+        <div className="absolute inset-0 bg-brand-espresso/60" />
+        <div className="relative mx-auto flex max-w-2xl flex-col items-center px-4 py-20 text-center">
           <RevealOnScroll>
-            <p className="font-script -rotate-2 text-4xl leading-none text-white/90 md:text-5xl">
-              ¿Armamos algo rico?
-            </p>
+            <h2 className="font-display text-4xl italic leading-tight md:text-6xl">¿Armamos algo rico?</h2>
           </RevealOnScroll>
-          <RevealOnScroll delay={70}>
-            <h2 className="font-display mt-2 max-w-2xl text-4xl font-extrabold uppercase leading-[0.95] tracking-tightest text-white md:text-6xl">
-              Contanos tu evento
-            </h2>
-          </RevealOnScroll>
-          <RevealOnScroll delay={130}>
-            <p className="mt-6 max-w-lg text-lg text-white/80">
+          <RevealOnScroll delay={90}>
+            <p className="mt-6 max-w-lg text-lg text-white/85">
               {get(
                 "home_cta_final",
                 "Escribinos por WhatsApp y te armamos una propuesta a medida, sin compromiso."
               )}
             </p>
           </RevealOnScroll>
-          <RevealOnScroll delay={190}>
+          <RevealOnScroll delay={170}>
             <a
               href={waHref}
               target="_blank"
@@ -484,16 +473,6 @@ export default function Home() {
               Escribinos por WhatsApp
             </a>
           </RevealOnScroll>
-          {contact?.phone && (
-            <RevealOnScroll delay={240}>
-              <a
-                href={`tel:${contact.phone.replace(/\s/g, "")}`}
-                className="mt-5 text-sm font-semibold text-white/70 transition hover:text-white"
-              >
-                o llamanos al {contact.phone}
-              </a>
-            </RevealOnScroll>
-          )}
         </div>
       </section>
     </PublicLayout>
