@@ -7,8 +7,6 @@ import PublicLayout from "../components/PublicLayout";
 import Marquee from "../components/Marquee";
 import ImageMarquee from "../components/ImageMarquee";
 import RevealOnScroll from "../components/ui/RevealOnScroll";
-import FloatingElement from "../components/ui/FloatingElement";
-import GlassPanel from "../components/ui/GlassPanel";
 
 /* Íconos inline: no sumamos dependencias nuevas al proyecto. */
 function IconWhatsApp({ className = "w-5 h-5" }: { className?: string }) {
@@ -16,38 +14,6 @@ function IconWhatsApp({ className = "w-5 h-5" }: { className?: string }) {
     <svg viewBox="0 0 32 32" fill="currentColor" className={className} aria-hidden="true">
       <path d="M16.001 3C9.373 3 4 8.373 4 15c0 2.386.7 4.605 1.902 6.474L4 29l7.72-1.87A11.94 11.94 0 0 0 16.001 27C22.628 27 28 21.627 28 15S22.628 3 16.001 3Zm.001 21.6c-1.94 0-3.79-.52-5.39-1.51l-.386-.235-4.58 1.11 1.13-4.46-.253-.399A9.55 9.55 0 0 1 5.4 15c0-5.85 4.75-10.6 10.6-10.6S26.6 9.15 26.6 15 21.85 24.6 16.002 24.6Zm5.61-7.94c-.307-.154-1.816-.897-2.098-1-.281-.103-.487-.154-.692.154-.205.307-.795 1-.975 1.205-.179.205-.359.23-.666.077-.307-.154-1.296-.478-2.469-1.523-.912-.813-1.529-1.817-1.708-2.124-.179-.307-.019-.473.135-.626.139-.138.307-.359.461-.538.154-.18.205-.307.307-.512.103-.205.051-.384-.026-.538-.077-.154-.692-1.667-.948-2.283-.25-.6-.505-.519-.692-.529l-.589-.01c-.205 0-.538.077-.82.384-.281.307-1.075 1.05-1.075 2.563 0 1.512 1.1 2.973 1.253 3.178.154.205 2.164 3.305 5.246 4.634.733.316 1.305.505 1.75.646.735.234 1.404.201 1.933.122.59-.088 1.816-.742 2.073-1.459.256-.717.256-1.332.179-1.459-.077-.128-.282-.205-.59-.36Z" />
     </svg>
-  );
-}
-
-function IconGoogle({ className = "w-5 h-5" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
-      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
-      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.26 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z" />
-      <path fill="#FBBC05" d="M5.84 14.09A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.44.34-2.09V7.07H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.93l3.66-2.84z" />
-      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1a11 11 0 0 0-9.82 6.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-    </svg>
-  );
-}
-
-/* Sello circular giratorio: activo de marca que ya venía del diseño anterior. */
-function SpinningBadge({ className = "" }: { className?: string }) {
-  return (
-    <div className={className}>
-      <svg className="absolute inset-0 w-full h-full animate-spin-slow" viewBox="0 0 100 100" aria-hidden="true">
-        <defs>
-          <path id="badgeCircle" d="M 50,50 m -38,0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0" />
-        </defs>
-        <text fill="#FFA610" fontSize="8.2" fontWeight="700" letterSpacing="2">
-          <textPath href="#badgeCircle">• SABOR DE HOGAR • FUSIÓN CON SAZÓN •</textPath>
-        </text>
-      </svg>
-      <div className="absolute inset-3 rounded-full bg-brand flex items-center justify-center text-white text-[11px] font-extrabold text-center leading-tight px-2 shadow-warm">
-        100%
-        <br />
-        CASERO
-      </div>
-    </div>
   );
 }
 
@@ -110,16 +76,6 @@ export default function Home() {
     : "#";
 
   const heroText = get("home_hero", "Convertimos cada celebración en una experiencia para recordar.");
-
-  /* Segunda foto del collage del hero: usamos la siguiente de tortas y, si no
-     hay, caemos a catering para que el bloque nunca quede vacío. */
-  const heroSecondary = tortasPreview[1]?.url ?? cateringHero?.url;
-
-  const stats = [
-    { value: "+20", label: "años de oficio" },
-    { value: "5.0", label: "52 reseñas en Google" },
-    { value: "100%", label: "casero, sin atajos" },
-  ];
 
   // Tarjetas de categorías con foto real, cada una lleva a su página.
   const foodCards = [
@@ -395,56 +351,31 @@ export default function Home() {
       {/* ================================================================
           TESTIMONIOS
       ================================================================= */}
-      <section id="testimonios" className="bg-brand-gray px-4 py-20 md:py-24">
-        <div className="mx-auto max-w-5xl">
-          <div className="mb-12 text-center">
-            <RevealOnScroll>
-              <p className="font-script -rotate-2 text-4xl leading-none text-brand md:text-5xl">
-                Lo que dicen
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={70}>
-              <h2 className="font-display mt-1 text-4xl font-extrabold uppercase tracking-tightest text-brand-dark md:text-5xl">
-                de nosotros
-              </h2>
-            </RevealOnScroll>
-            <RevealOnScroll delay={130}>
-              <GlassPanel className="mt-6 inline-flex items-center gap-2 !border-transparent !bg-white/70 px-5 py-2.5">
-                <IconGoogle className="h-5 w-5 shrink-0" />
-                <span className="font-extrabold text-brand-dark">5.0</span>
-                <span className="text-sm tracking-tighter text-brand-mustard">★★★★★</span>
-                <span className="text-sm text-brand-dark/50">· 52 reseñas de Google</span>
-              </GlassPanel>
-            </RevealOnScroll>
-          </div>
+      <section id="testimonios" className="bg-brand-mustard/15 px-4 py-24 md:py-28">
+        <div className="mx-auto max-w-6xl">
+          <RevealOnScroll className="mb-16 text-center">
+            <h2 className="font-display text-4xl italic text-brand-dark md:text-5xl">
+              Lo que dicen de nosotros
+            </h2>
+          </RevealOnScroll>
 
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
             {testimonials.map((t, i) => {
               const [name, source] = t.author.split(" · ");
               return (
-                <RevealOnScroll key={t.id} delay={i * 110}>
-                  <blockquote className="relative rounded-[1.5rem] bg-white p-7 pt-10 shadow-warm transition-transform duration-500 hover:-translate-y-1.5">
-                    <span className="font-display absolute -top-5 left-7 flex h-11 w-11 items-center justify-center rounded-full bg-brand-mustard text-2xl font-black leading-none text-white shadow-warm">
-                      &ldquo;
-                    </span>
-                    <div className="mb-3 text-sm tracking-tighter text-brand-mustard">★★★★★</div>
-                    <p className="leading-relaxed text-brand-dark/75">{t.text}</p>
-                    <footer className="mt-5 flex items-center gap-2">
-                      <span className="font-bold text-brand-dark">{name}</span>
-                      {source && (
-                        <span className="inline-flex items-center gap-1 text-xs text-brand-dark/40">
-                          <IconGoogle className="h-3.5 w-3.5 shrink-0" />
-                          {source}
-                        </span>
-                      )}
-                    </footer>
-                  </blockquote>
+                <RevealOnScroll key={t.id} delay={i * 90}>
+                  <div className="mb-3 text-sm tracking-tighter text-brand-mustard">★★★★★</div>
+                  <p className="text-[15px] leading-relaxed text-brand-dark/80">{t.text}</p>
+                  <p className="mt-4 text-sm font-bold text-brand-dark">
+                    {name}
+                    {source && <span className="font-normal text-brand-dark/50"> · {source}</span>}
+                  </p>
                 </RevealOnScroll>
               );
             })}
           </div>
 
-          <div className="mt-10 text-center">
+          <div className="mt-14 text-center">
             <a
               href="https://www.google.com/search?q=Fusi%C3%B3n+con+Saz%C3%B3n+Opiniones"
               target="_blank"
