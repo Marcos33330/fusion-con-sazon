@@ -313,14 +313,14 @@ export default function Home() {
               <img
                 src={nosotrosPhoto.url}
                 alt="Herminia y Oscar, fundadores de Fusión con Sazón"
-                className="relative mx-auto h-[420px] w-auto object-contain object-bottom drop-shadow-2xl md:h-[540px]"
+                className="arch-mask relative mx-auto h-[420px] w-[85%] object-cover object-top drop-shadow-2xl md:h-[540px]"
               />
             )}
           </RevealOnScroll>
 
           <div className="text-center lg:text-left">
             <RevealOnScroll>
-              <h2 className="font-display text-5xl font-extrabold uppercase leading-[0.9] tracking-tightest text-brand-dark md:text-6xl lg:text-7xl">
+              <h2 className="font-display text-5xl italic leading-[1.05] text-brand-dark md:text-6xl lg:text-7xl">
                 Nosotros
               </h2>
             </RevealOnScroll>
@@ -360,7 +360,7 @@ export default function Home() {
             </p>
           </RevealOnScroll>
           <RevealOnScroll delay={70}>
-            <h2 className="font-display mt-1 text-4xl font-extrabold uppercase tracking-tightest text-brand-dark md:text-5xl">
+            <h2 className="font-display mt-1 text-4xl italic text-brand-dark md:text-5xl">
               Cómo trabajamos
             </h2>
           </RevealOnScroll>
