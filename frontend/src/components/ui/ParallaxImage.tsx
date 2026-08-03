@@ -25,7 +25,11 @@ export default function ParallaxImage({
   // La imagen sobra overflowPct% en alto; la desplazamos entre los dos
   // extremos de ese sobrante para que nunca se vea un borde vacío.
   const half = overflowPct / 2;
-  const y = useTransform(scrollYProgress, [0, 1], [`-${half}%`, `${half}%`]);
+  // Los transforms en % son relativos a la altura del PROPIO elemento, que
+  // mide (100 + overflowPct)% del marco. Para desplazar exactamente half%
+  // del marco, hay que pedir esta fracción del elemento.
+  const driftPct = (half / (100 + overflowPct)) * 100;
+  const y = useTransform(scrollYProgress, [0, 1], [`-${driftPct}%`, `${driftPct}%`]);
 
   return (
     <div ref={ref} className={`relative overflow-hidden ${className ?? ""}`}>
